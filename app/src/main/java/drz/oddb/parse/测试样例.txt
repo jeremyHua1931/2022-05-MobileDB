@@ -29,7 +29,13 @@ SELECT company -> nandb.n1 FROM company WHERE salary=1000;
 //删除类
 DROP CLASS nandb;
 //删除类（同时删除代理类）
-DROP CLASS company; 
+DROP CLASS company;
+
+
+CREATE CLASS company1 (name char,age int, salary int);
+INSERT INTO company1 VALUES ("aa",20,1000);
+
+UNION SELECT name AS name1  FROM  company1 WHERE name="aa"; SELECT name AS name1  FROM  company1 WHERE name="aa";
 
 
 

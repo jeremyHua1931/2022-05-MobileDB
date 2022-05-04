@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -106,6 +107,8 @@ public class TransAction {
         parse p = new parse(byteArrayInputStream);
         try {
             String[] aa = p.Run();
+
+            System.out.println("打印结果:---------------->"+ Arrays.toString(aa));
 
             switch (Integer.parseInt(aa[0])) {
                 case parse.OPT_CREATE_ORIGINCLASS:
