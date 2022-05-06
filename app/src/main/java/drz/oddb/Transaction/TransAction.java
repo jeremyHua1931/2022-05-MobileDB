@@ -3,6 +3,7 @@ package drz.oddb.Transaction;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
 
 import java.io.ByteArrayInputStream;
@@ -108,7 +109,10 @@ public class TransAction {
         try {
             String[] aa = p.Run();
 
-            System.out.println("打印结果:---------------->"+ Arrays.toString(aa));
+            for(int i=0;i<aa.length;i++){
+                System.out.print("打印执行命令: "+aa[i]);
+            }
+
 
             switch (Integer.parseInt(aa[0])) {
                 case parse.OPT_CREATE_ORIGINCLASS:
@@ -128,6 +132,7 @@ public class TransAction {
                     break;
                 case parse.OPT_INSERT:
                     log.WriteLog(s);
+                    System.out.print("--------------开始插入");
                     Insert(aa);
                     new AlertDialog.Builder(context).setTitle("提示").setMessage("插入成功").setPositiveButton("确定",null).show();
                     break;
@@ -137,6 +142,7 @@ public class TransAction {
                     new AlertDialog.Builder(context).setTitle("提示").setMessage("删除成功").setPositiveButton("确定",null).show();
                     break;
                 case parse.OPT_SELECT_DERECTSELECT:
+                    System.out.print("--------------开始选择");
                     DirectSelect(aa);
                     break;
                 case parse.OPT_SELECT_INDERECTSELECT:
@@ -146,6 +152,11 @@ public class TransAction {
                     log.WriteLog(s);
                     Update(aa);
                     new AlertDialog.Builder(context).setTitle("提示").setMessage("更新成功").setPositiveButton("确定",null).show();
+                case parse.OPT_CREATE_UNIONDEPUTYCLASS:
+                    log.WriteLog(s);
+                    CreateUnionDeputyClass(aa);
+                    new AlertDialog.Builder(context).setTitle("提示").setMessage("union代理类创建成功").setPositiveButton("确定",null).show();
+
                 default:
                     break;
 
@@ -158,6 +169,27 @@ public class TransAction {
         return s;
 
     }
+
+
+    private  void CreateUnionDeputyClass(String[] p){
+
+        //String[] p1= new String[]{"9", "1", "2", "allAPP", "user", "0", "0", "user", "baidu1", "user", "=", "whu", "user", "0", "0", "user", "baidu2", "user", "=", "whu"};
+        System.out.print("开始创建union代理类-------执行数组:"+Arrays.toString(p));
+
+        /*
+        [OPT_CREATE_UNIONDEPUTYCLASS, attr_count, select_count, unionDeputyName,  [select1],[select2],[select3] ,[select4]]
+         */
+        //开始解析
+
+
+        //1-创建新的代理类
+
+        //2-循环执行select,并将获取返回结果,将其插入新建的代理类中
+
+
+
+    }
+
 
     //CREATE CLASS dZ123 (nB1 int,nB2 char) ;
     //1,2,dZ123,nB1,int,nB2,char
@@ -182,6 +214,8 @@ public class TransAction {
             p[o] = p[o].replace("\"","");
         }
 
+        System.out.println("打印p:---------------->"+ Arrays.toString(p));
+
         String classname = p[2];
         Object[] tuple_ = new Object[count];
 
@@ -198,6 +232,7 @@ public class TransAction {
             tuple_[j] = p[j+3];
         }
 
+        System.out.println("打印tuple:---------------->"+ Arrays.toString(tuple_));
         Tuple tuple = new Tuple(tuple_);
         tuple.tupleHeader=count;
 

@@ -34,13 +34,81 @@ DROP CLASS company;
 
 CREATE CLASS company1 (name char,age int, salary int);
 INSERT INTO company1 VALUES ("aa",20,1000);
+SELECT name AS name  FROM  company1 WHERE name="aa";
+SELECT name AS name ,age AS age , salary AS salary FROM  company1 WHERE name="aa";
+SELECT * FROM company1;
+
+SELECT name AS name1  FROM  company1;
 
 UNION SELECT name AS name1  FROM  company1 WHERE name="aa"; SELECT name AS name1  FROM  company1 WHERE name="aa";
 
 
+CREATE CLASS company1 (name char,age int, salary int);
+CREATE CLASS company2 (name char,age int, salary int);
+CREATE CLASS company1 (name char,age int, salary int);
+
+
+CREATE CLASS baidu     (user char, travel char,startX int, startY int, endX int , endY int);
+CREATE CLASS didi      (user char, travel char,startX float, startY float, endX float , endY float);
+CREATE CLASS helloBike (user char, travel char,startX float, startY float, endX float , endY float);
+CREATE CLASS nikeRun   (user char, travel char,startX float, startY float, endX float , endY float);
+
+CREATE CLASS baidu      (user char, travel char,startX float, startY float, endX float , endY float);
+INSERT INTO baidu VALUES ("whu","baidu",23,34.4,25.5,56.6);
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  baidu WHERE user="whu";
+
+CREATE CLASS baidu     (user char, travel char,startX int, startY int, endX int , endY int);
+INSERT INTO baidu VALUES ("whu","baidu",23,34,25,56);
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  baidu WHERE user="whu";
+
+
+CREATE CLASS baidu     (user char, travel char,startX float, startY float, endX float , endY float);
+CREATE CLASS didi      (user char, travel char,startX float, startY float, endX float , endY float);
+CREATE CLASS helloBike (user char, travel char,startX float, startY float, endX float , endY float);
+CREATE CLASS nikeRun   (user char, travel char,startX float, startY float, endX float , endY float);
+
+CREATE UNIONDEPUTYCLASS allAPP
+(
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  baidu WHERE user="whu"
+UNION
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  baidu WHERE user="whu"
+UNION
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  baidu WHERE user="whu"
+UNION
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  baidu WHERE user="whu"
+);
 
 
 
+已通过测试
+
+CREATE CLASS baidu     (user char, travel char,startX int, startY int, endX int , endY int);
+INSERT INTO baidu VALUES ("whu","baidu",23,34,25,56);
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  baidu WHERE user="whu";
+
+存在问题
+1-小数点读取问题
+
+
+
+测试代码
+
+CREATE CLASS baidu     (user char, travel char,startX float, startY float, endX float , endY float);
+CREATE CLASS didi      (user char, travel char,startX float, startY float, endX float , endY float);
+CREATE CLASS helloBike (user char, travel char,startX float, startY float, endX float , endY float);
+CREATE CLASS nikeRun   (user char, travel char,startX float, startY float, endX float , endY float);
+
+CREATE UNIONDEPUTYCLASS allAPP
+AS
+(
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  baidu WHERE user="whu"
+UNION
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  baidu WHERE user="whu"
+UNION
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  baidu WHERE user="whu"
+UNION
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  baidu WHERE user="whu"
+);
 
 
 

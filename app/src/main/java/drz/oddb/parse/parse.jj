@@ -18,7 +18,7 @@ public static final int OPT_DELETE                = 5;
 public static final int OPT_SELECT_DERECTSELECT   = 6;
 public static final int OPT_SELECT_INDERECTSELECT = 7;
 public static final int OPT_CREATE_UPDATE         = 8;
-public static final int OPT_OBJECT_UNION          = 9;
+public static final int OPT_CREATE_UNIONDEPUTYCLASS        = 9;
 
 	static Queue<String > st= new LinkedList<String>(); ;
   public static void main(String args[]) throws ParseException {
@@ -33,9 +33,9 @@ PARSER_END(parse)
 SKIP :
 {
   " "
-| "/t"
-| "/n"
-| "/r"
+| "\t"
+| "\n"
+| "\r"
 }
 
 TOKEN:
@@ -45,6 +45,7 @@ TOKEN:
 |<DROP:"DROP">
 |<CLASS:"CLASS">
 |<INSERT:"INSERT">
+|<UNION:"UNION">
 |<INTO:"INTO">
 |<VALUES:"VALUES">
 |<LEFT_BRACKET:"(">
@@ -55,9 +56,13 @@ TOKEN:
 |<WHERE:"WHERE">
 |<SELECT:"SELECT">
 |<SELECTDEPUTY:"SELECTDEPUTY">
+|<UNIONDEPUTYCLASS:"UNIONDEPUTYCLASS">
 |<ID: ["a"-"z"](["a"-"z","A"-"Z","0"-"9"])* >
 |<EQUAL:"=">
-|<INT: "0"|(["1"-"9"](["0"-"9"])*) >
+|<INT :"0"| (["0"-"9"])+
+                  | (["0"-"9"])+ "." (["0"-"9"])+
+                  | (["0"-"9"])+ "."
+                  | "." (["0"-"9"])+ >
 |<STRING: "\""(["a"-"z","A"-"Z","1"-"9"])*"\"" >
 |<CROSS:"->">
 |<DOT:".">
@@ -65,8 +70,8 @@ TOKEN:
 |<PLUS:"+">
 |<UPDATE:"UPDATE">
 |<SET:"SET">
-|<UNION:"UNION">
 }
+
 
 
 String[] Run():
@@ -78,7 +83,7 @@ String[] Run():
   {
     //System.out.println(s+"\n");
     return s ;
-  } 
+  }
 }
 
 String[] sql() :
@@ -90,7 +95,6 @@ String[] sql() :
 	String insert_s;
 	String delete_s;
 	String update_s;
-	String union_s;
 }
 {
    create_s = create() {sql_s = create_s;System.out.println(sql_s+"\n");return sql_s.split(","); }
@@ -99,57 +103,19 @@ String[] sql() :
    |insert_s = insert2(){sql_s = insert_s;System.out.println(sql_s+"\n");return sql_s.split(",");  }
    |delete_s = delete(){sql_s = delete_s;System.out.println(sql_s+"\n");return sql_s.split(",");  }
    |update_s = update() {sql_s = update_s;System.out.println(sql_s+"\n");return sql_s.split(","); }
-   |union_s = union() {sql_s = union_s;System.out.println(sql_s+"\n");return sql_s.split(","); }
-}
-
-String union() :
-{
-	String select_s1,select_s2;
-	String union_s="";
-	int count1,count2;
-}
-{<UNION>
-    (<SELECT> count1 = directselect() <SEMICOLON>)
-        {
-    	  select_s1 = OPT_SELECT_DERECTSELECT+",";
-          select_s1 += count1;
-          while(!st.isEmpty())
-          {
-            select_s1 +=",";
-            select_s1 += st.poll();
-
-          }
-          //return select_s;
-        }
-
-    (<SELECT> count2 = directselect() <SEMICOLON>)
-        {
-    	  select_s2 = OPT_SELECT_DERECTSELECT+",";
-          select_s2 += count2;
-          while(!st.isEmpty())
-          {
-            select_s2 +=",";
-            select_s2 += st.poll();
-
-          }
-          union_s+=OPT_OBJECT_UNION+",";
-          union_s+=count1;
-          union_s+=select_s1;
-          union_s+=",";
-          union_s+=count2;
-          union_s+=select_s2;
-          return union_s;
-        }
 }
 
 
 String create() :
 {
 	String create_s;
-	int count;
+	int count;//select result
+	int count1; //temporary select result
+	int count2;//count for select
+	String classname;
 }
 {
-    (<CREATE> count = originclass())
+    (<CREATE> count = originclass() <SEMICOLON>)
     {
       create_s = OPT_CREATE_ORIGINCLASS+",";
       create_s += count;
@@ -157,7 +123,7 @@ String create() :
       {
         create_s +=",";
         create_s += st.poll();
-        
+
       }
       return create_s;
     }
@@ -170,13 +136,32 @@ String create() :
       {
         create_s +=",";
         create_s += st.poll();
-        
+
       }
       return create_s;
     }
-    
-}
+    |(<CREATE> <UNIONDEPUTYCLASS> classname=classname() {st.add(classname);} <AS>
+    <LEFT_BRACKET>
+     <SELECT> count = directselect()
+    <UNION> <SELECT> count1=directselect() {if(count1!=count) return "-1";count2=2;}
+    ( <UNION> <SELECT> count1=directselect() {if(count1!=count) return "-1";count2++;}) *
+    <RIGHT_BRACKET> <SEMICOLON>)
+         {
+           create_s = OPT_CREATE_UNIONDEPUTYCLASS+",";
+           create_s += count;
+           create_s +=",";
+           create_s += count2;
+           while(!st.isEmpty())
+           {
+             create_s +=",";
+             create_s += st.poll();
 
+           }
+           create_s +=",";
+           return create_s;
+         }
+
+}
 String drop() :
 {
 	String cln;
@@ -199,7 +184,7 @@ String insert2():
       {
         insert_s +=",";
         insert_s += st.poll();
-        
+
       }
       return insert_s;
 	}
@@ -252,7 +237,7 @@ String select() :
       {
         select_s +=",";
         select_s += st.poll();
-        
+
       }
       return select_s;
     }
@@ -265,11 +250,11 @@ String select() :
       {
         select_s +=",";
         select_s += st.poll();
-        
+
       }
       return select_s;
     }
-    
+
 }
 
 int originclass() :
@@ -280,12 +265,12 @@ int originclass() :
 	int count = 0;
 }
 {
-    <CLASS> 
+    <CLASS>
     cln = classname() {st.add(cln); }
-    <LEFT_BRACKET> 
+    <LEFT_BRACKET>
     attr_s = attr()  {st.add(attr_s); }
     attrtype_s = attrtype() {st.add(attrtype_s); count++; }
-    (<COMMA> attr_s = attr() {st.add(attr_s); } attrtype_s = attrtype() {st.add(attrtype_s); count++; })* 
+    (<COMMA> attr_s = attr() {st.add(attr_s); } attrtype_s = attrtype() {st.add(attrtype_s); count++; })*
     <RIGHT_BRACKET>
     {return count;}
 
@@ -370,6 +355,7 @@ int directselect() :
     cln = classname() {st.add(cln); }
     <WHERE>
     cond = condition() {st.add(cond);return count; }
+
 }
 
 int indirectselect() :
