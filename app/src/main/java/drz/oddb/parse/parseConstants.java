@@ -21,47 +21,49 @@ public interface parseConstants {
   /** RegularExpression Id. */
   int INSERT = 9;
   /** RegularExpression Id. */
-  int INTO = 10;
+  int UNION = 10;
   /** RegularExpression Id. */
-  int VALUES = 11;
+  int INTO = 11;
   /** RegularExpression Id. */
-  int LEFT_BRACKET = 12;
+  int VALUES = 12;
   /** RegularExpression Id. */
-  int COMMA = 13;
+  int LEFT_BRACKET = 13;
   /** RegularExpression Id. */
-  int RIGHT_BRACKET = 14;
+  int COMMA = 14;
   /** RegularExpression Id. */
-  int DELETE = 15;
+  int RIGHT_BRACKET = 15;
   /** RegularExpression Id. */
-  int FROM = 16;
+  int DELETE = 16;
   /** RegularExpression Id. */
-  int WHERE = 17;
+  int FROM = 17;
   /** RegularExpression Id. */
-  int SELECT = 18;
+  int WHERE = 18;
   /** RegularExpression Id. */
-  int SELECTDEPUTY = 19;
+  int SELECT = 19;
   /** RegularExpression Id. */
-  int ID = 20;
+  int SELECTDEPUTY = 20;
   /** RegularExpression Id. */
-  int EQUAL = 21;
+  int UNIONDEPUTYCLASS = 21;
   /** RegularExpression Id. */
-  int INT = 22;
+  int ID = 22;
   /** RegularExpression Id. */
-  int STRING = 23;
+  int EQUAL = 23;
   /** RegularExpression Id. */
-  int CROSS = 24;
+  int INT = 24;
   /** RegularExpression Id. */
-  int DOT = 25;
+  int STRING = 25;
   /** RegularExpression Id. */
-  int AS = 26;
+  int CROSS = 26;
   /** RegularExpression Id. */
-  int PLUS = 27;
+  int DOT = 27;
   /** RegularExpression Id. */
-  int UPDATE = 28;
+  int AS = 28;
   /** RegularExpression Id. */
-  int SET = 29;
+  int PLUS = 29;
   /** RegularExpression Id. */
-  int UNION = 30;
+  int UPDATE = 30;
+  /** RegularExpression Id. */
+  int SET = 31;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -70,14 +72,15 @@ public interface parseConstants {
   String[] tokenImage = {
     "<EOF>",
     "\" \"",
-    "\"/t\"",
-    "\"/n\"",
-    "\"/r\"",
+    "\"\\t\"",
+    "\"\\n\"",
+    "\"\\r\"",
     "\";\"",
     "\"CREATE\"",
     "\"DROP\"",
     "\"CLASS\"",
     "\"INSERT\"",
+    "\"UNION\"",
     "\"INTO\"",
     "\"VALUES\"",
     "\"(\"",
@@ -88,6 +91,7 @@ public interface parseConstants {
     "\"WHERE\"",
     "\"SELECT\"",
     "\"SELECTDEPUTY\"",
+    "\"UNIONDEPUTYCLASS\"",
     "<ID>",
     "\"=\"",
     "<INT>",
@@ -98,7 +102,6 @@ public interface parseConstants {
     "\"+\"",
     "\"UPDATE\"",
     "\"SET\"",
-    "\"UNION\"",
   };
 
 }

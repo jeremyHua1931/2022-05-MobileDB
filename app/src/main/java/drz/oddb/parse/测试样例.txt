@@ -1,10 +1,15 @@
 CREATE CLASS company (name char,age int, salary int);
 INSERT INTO company VALUES ("aa",20,1000);
+CREATE SELECTDEPUTY nandb SELECT name AS n1,age+5 AS birth,salary AS s1 FROM company WHERE age=20;
+
 INSERT INTO company VALUES ("bb",30,8000);
 INSERT INTO company VALUES ("cc",30,8000);
 INSERT INTO company VALUES ("dd",20,1000);
 INSERT INTO company VALUES ("ee",20,1000);
 INSERT INTO company VALUES ("ff",30,1000);
+
+CREATE CLASS company4 (name char,age int, salary int);
+INSERT INTO company4 VALUES ("bb",30,8000);
 
 //虚属性
 //创建代理类
@@ -111,7 +116,36 @@ SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX 
 );
 
 
+CREATE UNIONDEPUTYCLASS allAPP
+AS
+(
+SELECT user AS userNew, travel AS travelNew ,startX AS startXNew, startY AS startYNew, endX AS endXNew, endY AS endYNew FROM  baidu WHERE user="whu"
+UNION
+SELECT user AS userNew, travel AS travelNew ,startX AS startXNew, startY AS startYNew, endX AS endXNew, endY AS endYNew FROM  didi WHERE user="whu"
+);
 
 
 
+CREATE UNIONDEPUTYCLASS allAPP
+AS
+(
+SELECT user1 AS user, travel AS travel ,startX AS startX FROM  baidu WHERE user="whu"
+UNION
+SELECT user2 AS user, travel AS travel ,startX AS startX FROM  baidu WHERE user="whu"
+UNION
+SELECT user3 AS user, travel AS travel ,startX AS startX FROM  baidu WHERE user="whu"
+UNION
+SELECT user4 AS user, travel AS travel ,startX AS startX FROM  baidu WHERE user="whu"
+);
 
+CREATE UNIONDEPUTYCLASS allAPP
+AS
+(
+SELECT user AS user, travel AS travel ,startX AS startX FROM  baidu WHERE user="whu"
+UNION
+SELECT user AS user, travel AS travel ,startX AS startX FROM  baidu WHERE user="whu"
+UNION
+SELECT user AS user, travel AS travel ,startX AS startX FROM  baidu WHERE user="whu"
+UNION
+SELECT user AS user, travel AS travel ,startX AS startX FROM  baidu WHERE user="whu"
+);
