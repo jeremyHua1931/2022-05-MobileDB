@@ -39,20 +39,19 @@ public class TransAction {
 
     LogManage log = new LogManage(this);
 
-    public void SaveAll( )
-    {
+    public void SaveAll() {
         mem.saveObjectTable(topt);
         mem.saveClassTable(classt);
         mem.saveDeputyTable(deputyt);
         mem.saveBiPointerTable(biPointerT);
         mem.saveSwitchingTable(switchingT);
         mem.saveLog(log.LogT);
-        while(!mem.flush());
-        while(!mem.setLogCheck(log.LogT.logID));
+        while (!mem.flush()) ;
+        while (!mem.setLogCheck(log.LogT.logID)) ;
         mem.setCheckPoint(log.LogT.logID);//成功退出,所以新的事务块一定全部执行
     }
 
-    public void Test(){
+    public void Test() {
         TupleList tpl = new TupleList();
         Tuple t1 = new Tuple();
         t1.tupleHeader = 5;
@@ -73,22 +72,22 @@ public class TransAction {
 
         tpl.addTuple(t1);
         tpl.addTuple(t2);
-        String[] attrname = {"attr2","attr1","attr3","attr5","attr4"};
-        int[] attrid = {1,0,2,4,3};
-        String[]attrtype = {"int","char","char","char","int"};
+        String[] attrname = {"attr2", "attr1", "attr3", "attr5", "attr4"};
+        int[] attrid = {1, 0, 2, 4, 3};
+        String[] attrtype = {"int", "char", "char", "char", "int"};
 
-        PrintSelectResult(tpl,attrname,attrid,attrtype);
+        PrintSelectResult(tpl, attrname, attrid, attrtype);
 
         int[] a = InsertTuple(t1);
-        Tuple t3 = GetTuple(a[0],a[1]);
+        Tuple t3 = GetTuple(a[0], a[1]);
         int[] b = InsertTuple(t2);
-        Tuple t4 = GetTuple(b[0],b[1]);
+        Tuple t4 = GetTuple(b[0], b[1]);
         System.out.println(t3);
     }
 
-    private boolean RedoRest(){//redo
+    private boolean RedoRest() {//redo
         LogTable redo;
-        if((redo=log.GetReDo())!=null) {
+        if ((redo = log.GetReDo()) != null) {
             int redonum = redo.logTable.size();   //先把redo指令加前面
             for (int i = 0; i < redonum; i++) {
                 String s = redo.logTable.get(i).str;
@@ -96,7 +95,7 @@ public class TransAction {
                 log.WriteLog(s);
                 query(s);
             }
-        }else{
+        } else {
             return false;
         }
         return true;
@@ -112,20 +111,19 @@ public class TransAction {
             //预置插入
 
 
-
             System.out.println("打印");
             System.out.println(Arrays.toString(aa));
 
-            if(classt.startTmp==0){
+            if (classt.startTmp == 0) {
                 classt.startTmp++;
                 System.out.println("第一次执行时,预置插入下列命令");
                 System.out.println("CREATE CLASS company (name char,age int, salary int);\n" +
                         "INSERT INTO company VALUES (\"aa\",20,1000);");
 
-                String[] company1CreateTmp=new String[]{"1", "3", "company1", "name", "char", "age", "int", "salary", "int"};
-                String[] company2CreateTmp=new String[]{"1", "3", "company2", "name", "char", "age", "int", "salary", "int"};
-                String[] company1InsertTmp=new String[]{"4", "3", "company1", "aa", "20", "1000"};
-                String[] company2InsertTmp=new String[]{"4", "3", "company2", "aa", "20", "1000"};
+                String[] company1CreateTmp = new String[]{"1", "3", "company1", "name", "char", "age", "int", "salary", "int"};
+                String[] company2CreateTmp = new String[]{"1", "3", "company2", "name", "char", "age", "int", "salary", "int"};
+                String[] company1InsertTmp = new String[]{"4", "3", "company1", "aa", "20", "1000"};
+                String[] company2InsertTmp = new String[]{"4", "3", "company2", "aa", "20", "1000"};
 
                 CreateOriginClass(company1CreateTmp);
                 CreateOriginClass(company2CreateTmp);
@@ -134,32 +132,31 @@ public class TransAction {
             }
 
 
-
             switch (Integer.parseInt(aa[0])) {
                 case parse.OPT_CREATE_ORIGINCLASS:
                     log.WriteLog(s);
                     CreateOriginClass(aa);
-                    new AlertDialog.Builder(context).setTitle("提示").setMessage("创建成功").setPositiveButton("确定",null).show();
+                    new AlertDialog.Builder(context).setTitle("提示").setMessage("创建成功").setPositiveButton("确定", null).show();
                     break;
                 case parse.OPT_CREATE_SELECTDEPUTY:
                     log.WriteLog(s);
                     CreateSelectDeputy(aa);
-                    new AlertDialog.Builder(context).setTitle("提示").setMessage("创建成功").setPositiveButton("确定",null).show();
+                    new AlertDialog.Builder(context).setTitle("提示").setMessage("创建成功").setPositiveButton("确定", null).show();
                     break;
                 case parse.OPT_DROP:
                     log.WriteLog(s);
                     Drop(aa);
-                    new AlertDialog.Builder(context).setTitle("提示").setMessage("删除成功").setPositiveButton("确定",null).show();
+                    new AlertDialog.Builder(context).setTitle("提示").setMessage("删除成功").setPositiveButton("确定", null).show();
                     break;
                 case parse.OPT_INSERT:
                     log.WriteLog(s);
                     Insert(aa);
-                    new AlertDialog.Builder(context).setTitle("提示").setMessage("插入成功").setPositiveButton("确定",null).show();
+                    new AlertDialog.Builder(context).setTitle("提示").setMessage("插入成功").setPositiveButton("确定", null).show();
                     break;
                 case parse.OPT_DELETE:
                     log.WriteLog(s);
                     Delete(aa);
-                    new AlertDialog.Builder(context).setTitle("提示").setMessage("删除成功").setPositiveButton("确定",null).show();
+                    new AlertDialog.Builder(context).setTitle("提示").setMessage("删除成功").setPositiveButton("确定", null).show();
                     break;
                 case parse.OPT_SELECT_DERECTSELECT:
                     DirectSelect(aa);
@@ -170,12 +167,12 @@ public class TransAction {
                 case parse.OPT_CREATE_UPDATE:
                     log.WriteLog(s);
                     Update(aa);
-                    new AlertDialog.Builder(context).setTitle("提示").setMessage("更新成功").setPositiveButton("确定",null).show();
+                    new AlertDialog.Builder(context).setTitle("提示").setMessage("更新成功").setPositiveButton("确定", null).show();
                 case parse.OPT_CREATE_UNIONDEPUTYCLASS:
                     log.WriteLog(s);
                     System.out.println("进入创建union代理类");
                     CreateUnionDeputyClass(aa);
-                    new AlertDialog.Builder(context).setTitle("提示").setMessage("union代理类创建成功").setPositiveButton("确定",null).show();
+                    new AlertDialog.Builder(context).setTitle("提示").setMessage("union代理类创建成功").setPositiveButton("确定", null).show();
 
                 default:
                     break;
@@ -191,7 +188,7 @@ public class TransAction {
     }
 
 
-    private  void CreateUnionDeputyClass(String[] p){
+    private void CreateUnionDeputyClass(String[] p) {
 
         System.out.print("开始创建union代理类,执行数组:");
         System.out.println(Arrays.toString(p));
@@ -200,18 +197,18 @@ public class TransAction {
         [OPT_CREATE_UNIONDEPUTYCLASS, attr_count, select_count, unionDeputyName,  [select1],[select2],[select3] ,[select4]]
          */
         //开始解析
-        String OPT_union=p[0];
-        String attrCount=p[1];
-        String selectCount=p[2];
-        String unionDeputyName=p[3];
+        String OPT_union = p[0];
+        String attrCount = p[1];
+        String selectCount = p[2];
+        String unionDeputyName = p[3];
 
-        int OneSelect=(p.length-3)/Integer.parseInt(selectCount);
+        int OneSelect = (p.length - 3) / Integer.parseInt(selectCount);
 
-        System.out.println("操作符是： "+OPT_union);
-        System.out.println("新代理类名称: "+ unionDeputyName);
-        System.out.println("代理类属性个数: "+attrCount);
-        System.out.println("select 个数是: "+selectCount);
-        System.out.println("每一个select占用的数组位置个数: "+ OneSelect);
+        System.out.println("操作符是： " + OPT_union);
+        System.out.println("新代理类名称: " + unionDeputyName);
+        System.out.println("代理类属性个数: " + attrCount);
+        System.out.println("select 个数是: " + selectCount);
+        System.out.println("每一个select占用的数组位置个数: " + OneSelect);
 
         /*
 I/System.out: 第一次执行时,预置插入下列命令
@@ -232,42 +229,42 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
 
         //拆分select数组
         //selectALL 每一行即一个select语句执行命令
-        String [][]  selectALL=new String[Integer.parseInt(selectCount)][OneSelect+2];
+        String[][] selectALL = new String[Integer.parseInt(selectCount)][OneSelect + 2];
 
         //新代理类属性名
-        String[] NewAttr=new String[Integer.parseInt(attrCount)];
+        String[] NewAttr = new String[Integer.parseInt(attrCount)];
         //每一行即一个select语句原属性名
-        String[][] oldAttr= new String[Integer.parseInt(selectCount)][Integer.parseInt(attrCount)];
+        String[][] oldAttr = new String[Integer.parseInt(selectCount)][Integer.parseInt(attrCount)];
 
 
-        for(int i=0;i<Integer.parseInt(selectCount);i++){
+        for (int i = 0; i < Integer.parseInt(selectCount); i++) {
 
-            selectALL[i][0]="6";
-            selectALL[i][1]="6";
-            for(int j=0;j<OneSelect;j++){
-                selectALL[i][j+2]=p[i*OneSelect+j+4];
+            selectALL[i][0] = "6";
+            selectALL[i][1] = "6";
+            for (int j = 0; j < OneSelect; j++) {
+                selectALL[i][j + 2] = p[i * OneSelect + j + 4];
             }
-            System.out.println("打印第: "+(i+1)+" 个select部分");
+            System.out.println("打印第: " + (i + 1) + " 个select部分");
             System.out.println(Arrays.toString(selectALL[i]));
         }
 
-        for(int i=0;i<Integer.parseInt(selectCount);i++) {
+        for (int i = 0; i < Integer.parseInt(selectCount); i++) {
 
-            for(int j=0;j<Integer.parseInt(attrCount);j++){
-                oldAttr[i][j]=selectALL[i][4*j+2];
+            for (int j = 0; j < Integer.parseInt(attrCount); j++) {
+                oldAttr[i][j] = selectALL[i][4 * j + 2];
             }
-            System.out.println("打印第: "+(i+1)+" 个select 旧属性名");
+            System.out.println("打印第: " + (i + 1) + " 个select 旧属性名");
             System.out.println(Arrays.toString(oldAttr[i]));
         }
 
 
-        int[] attrid=new int [Integer.parseInt(attrCount)];
-        for(int i=0;i<Integer.parseInt(attrCount);i=i+1){
-            NewAttr[i]=selectALL[0][4*i+5];
-            attrid[i]=i;
+        int[] attrid = new int[Integer.parseInt(attrCount)];
+        for (int i = 0; i < Integer.parseInt(attrCount); i = i + 1) {
+            NewAttr[i] = selectALL[0][4 * i + 5];
+            attrid[i] = i;
         }
-        System.out.println("新属性数组: "+ Arrays.toString(NewAttr));
-        System.out.println("新属性数组id: "+ Arrays.toString(attrid));
+        System.out.println("新属性数组: " + Arrays.toString(NewAttr));
+        System.out.println("新属性数组id: " + Arrays.toString(attrid));
 
         //创建新的代理类,循环执行select,并将获取返回结果,将其插入新建的代理类中
         /*
@@ -296,49 +293,56 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
 
          */
 
-        //1-修改ClassTable
+        //1-修改ClassTable和SwitchingTable
 
         System.out.println("开始修改ClassTable");
         //给新生成的代理类分配类id,默认在原有的基础上加1;
         classt.maxid++;
 
-        int classid=classt.maxid; //代理类的id
-        int bedeputyid=-1; //被代理的类的id
+        int classid = classt.maxid; //代理类的id
+        int bedeputyid = -1; //被代理的类的id
 
         System.out.println("由于所有新属性名在所有的select中保持一致,选择第一个select语句, 即: ");
         System.out.println(Arrays.toString(selectALL[0]));
 
-        String beDeputyName =selectALL[0][OneSelect-2];
-        System.out.println("被代理类的名字是" +beDeputyName);
+        String beDeputyName = selectALL[0][OneSelect - 2];
+        System.out.println("被代理类的名字是" + beDeputyName);
 
 
+        for (int i = 0; i < Integer.parseInt(attrCount); i++) {
+            for (ClassTableItem item : classt.classTable) {
+                //遍历到的类名等于被代理的类名且属性名等于第一个被选择的代理属性名(依次选择),增加代理类新属性名到classt表上
+                if (item.classname.equals(beDeputyName) && item.attrname.equals(selectALL[0][4 * i + 2])) {
+                    bedeputyid = item.classid;
 
-            for (int i = 0; i < Integer.parseInt(attrCount); i++) {
-                for (ClassTableItem item : classt.classTable) {
-                    //遍历到的类名等于被代理的类名且属性名等于第一个被选择的代理属性名(依次选择),增加代理类新属性名到classt表上
-                    if (item.classname.equals(beDeputyName) && item.attrname.equals(selectALL[0][4 * i + 2])) {
-                        bedeputyid = item.classid;
+                    classt.classTable.add(new ClassTableItem(unionDeputyName, classid, Integer.parseInt(attrCount), attrid[i], NewAttr[i], item.attrtype, "de"));
 
-                        classt.classTable.add(new ClassTableItem(unionDeputyName, classid, Integer.parseInt(attrCount), attrid[i], NewAttr[i], item.attrtype, "de"));
-
-                        //修改SwitchingTable, 几个select执行几次
-                        if (Integer.parseInt(selectALL[0][3 + 4 * i]) == 1) {
-                            switchingT.switchingTable.add(new SwitchingTableItem(item.attrname, NewAttr[i], selectALL[0][4 + 4 * i]));
-                        }
-                        if (Integer.parseInt(selectALL[0][3 + 4 * i]) == 0) {
-                            switchingT.switchingTable.add(new SwitchingTableItem(item.attrname, NewAttr[i], "0"));
-                        }
-                        break;
+                    //修改SwitchingTable
+                    if (Integer.parseInt(selectALL[0][3 + 4 * i]) == 1) {
+                        switchingT.switchingTable.add(new SwitchingTableItem(item.attrname, NewAttr[i], selectALL[0][4 + 4 * i]));
                     }
+                    if (Integer.parseInt(selectALL[0][3 + 4 * i]) == 0) {
+                        switchingT.switchingTable.add(new SwitchingTableItem(item.attrname, NewAttr[i], "0"));
+                    }
+                    break;
                 }
-
             }
+        }
 
-
-
-
-
-
+        //2-修改deputyTable
+        String[][] condition= new String[Integer.parseInt(selectCount)][3];
+        for(int i=0;i<Integer.parseInt(selectCount);i++){
+            condition[i][2]=selectALL[i][OneSelect+1];
+//            String s=condition[i][2];
+//            s=s.replace("\"","");
+//            condition[i][2]=s;
+//            System.out.println(condition[i][2]);
+            condition[i][1]=selectALL[i][OneSelect];
+            condition[i][0]=selectALL[i][OneSelect-1];
+            deputyt.deputyTable.add(new DeputyTableItem(bedeputyid,classid,condition[i]));
+            System.out.println("打印第: " + (i + 1) + " 个where");
+            System.out.println(Arrays.toString(condition[i]));
+        }
 
 
     }
@@ -352,65 +356,64 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
         //生成的代理类的名称
         String classname = p[2];//代理类的名字
         //被代理的类的名称
-        String bedeputyname = p[4*count+3];//代理的类的名字
+        String bedeputyname = p[4 * count + 3];//代理的类的名字
 
         classt.maxid++;
         int classid = classt.maxid;//代理类的id
         int bedeputyid = -1;//代理的类的id
 
-        String[] attrname=new String[count];
-        String[] bedeputyattrname=new String[count];
+        String[] attrname = new String[count];
+        String[] bedeputyattrname = new String[count];
 
 
         int[] bedeputyattrid = new int[count];
-        String[] attrtype=new String[count];
-        int[] attrid=new int[count];
+        String[] attrtype = new String[count];
+        int[] attrid = new int[count];
 
 
         //提取旧属性名称和代理类名称
-        for(int j = 0;j<count;j++){
-            attrname[j] = p[4*j+6];
+        for (int j = 0; j < count; j++) {
+            attrname[j] = p[4 * j + 6];
             attrid[j] = j;
-            bedeputyattrname[j] = p[4*j+3];
+            bedeputyattrname[j] = p[4 * j + 3];
         }
 
         String attrtype1;
         for (int i = 0; i < count; i++) {
-            for (ClassTableItem item:classt.classTable) {
-                if (item.classname.equals(bedeputyname)&&item.attrname.equals(p[3+4*i])) {
+            for (ClassTableItem item : classt.classTable) {
+                if (item.classname.equals(bedeputyname) && item.attrname.equals(p[3 + 4 * i])) {
                     bedeputyid = item.classid;
                     bedeputyattrid[i] = item.attrid;
 
-                    classt.classTable.add(new ClassTableItem(classname, classid, count,attrid[i],attrname[i], item.attrtype,"de"));
+                    classt.classTable.add(new ClassTableItem(classname, classid, count, attrid[i], attrname[i], item.attrtype, "de"));
                     //swi
-                    if(Integer.parseInt(p[4+4*i]) == 1){
-                        switchingT.switchingTable.add(new SwitchingTableItem(item.attrname,attrname[i],p[5+4*i]));
+                    if (Integer.parseInt(p[4 + 4 * i]) == 1) {
+                        switchingT.switchingTable.add(new SwitchingTableItem(item.attrname, attrname[i], p[5 + 4 * i]));
                     }
-                    if(Integer.parseInt(p[4+4*i])==0){
-                        switchingT.switchingTable.add(new SwitchingTableItem(item.attrname,attrname[i],"0"));
+                    if (Integer.parseInt(p[4 + 4 * i]) == 0) {
+                        switchingT.switchingTable.add(new SwitchingTableItem(item.attrname, attrname[i], "0"));
                     }
                     break;
                 }
-            };
+            }
+            ;
         }
 
 
         //where条件
-        String[] con =new String[3];
-        con[0] = p[4+4*count];
-        con[1] = p[5+4*count];
-        con[2] = p[6+4*count];
-        deputyt.deputyTable.add(new DeputyTableItem(bedeputyid,classid,con));
+        String[] con = new String[3];
+        con[0] = p[4 + 4 * count];
+        con[1] = p[5 + 4 * count];
+        con[2] = p[6 + 4 * count];
+        deputyt.deputyTable.add(new DeputyTableItem(bedeputyid, classid, con));
 
 
-
-
-        TupleList tpl= new TupleList();
+        TupleList tpl = new TupleList();
 
         int conid = 0;
-        String contype  = null;
-        for(ClassTableItem item3:classt.classTable){
-            if(item3.attrname.equals(con[0])){
+        String contype = null;
+        for (ClassTableItem item3 : classt.classTable) {
+            if (item3.attrname.equals(con[0])) {
                 conid = item3.attrid;
                 contype = item3.attrtype;
                 break;
@@ -419,24 +422,24 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
 
 
         List<ObjectTableItem> obj = new ArrayList<>();
-        for(ObjectTableItem item2:topt.objectTable){
-            if(item2.classid ==bedeputyid){
-                Tuple tuple = GetTuple(item2.blockid,item2.offset);
-                if(Condition(contype,tuple,conid,con[2])){
+        for (ObjectTableItem item2 : topt.objectTable) {
+            if (item2.classid == bedeputyid) {
+                Tuple tuple = GetTuple(item2.blockid, item2.offset);
+                if (Condition(contype, tuple, conid, con[2])) {
                     //插入
                     //swi
                     Tuple ituple = new Tuple();
                     ituple.tupleHeader = count;
                     ituple.tuple = new Object[count];
 
-                    for(int o =0;o<count;o++){
-                        if(Integer.parseInt(p[4+4*o]) == 1){
-                            int value = Integer.parseInt(p[5+4*o]);
-                            int orivalue =Integer.parseInt((String)tuple.tuple[bedeputyattrid[o]]);
-                            Object ob = value+orivalue;
+                    for (int o = 0; o < count; o++) {
+                        if (Integer.parseInt(p[4 + 4 * o]) == 1) {
+                            int value = Integer.parseInt(p[5 + 4 * o]);
+                            int orivalue = Integer.parseInt((String) tuple.tuple[bedeputyattrid[o]]);
+                            Object ob = value + orivalue;
                             ituple.tuple[o] = ob;
                         }
-                        if(Integer.parseInt(p[4+4*o]) == 0){
+                        if (Integer.parseInt(p[4 + 4 * o]) == 0) {
                             ituple.tuple[o] = tuple.tuple[bedeputyattrid[o]];
                         }
                     }
@@ -444,21 +447,20 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
                     topt.maxTupleId++;
                     int tupid = topt.maxTupleId;
 
-                    int [] aa = InsertTuple(ituple);
+                    int[] aa = InsertTuple(ituple);
                     //topt.objectTable.add(new ObjectTableItem(classid,tupid,aa[0],aa[1]));
-                    obj.add(new ObjectTableItem(classid,tupid,aa[0],aa[1]));
+                    obj.add(new ObjectTableItem(classid, tupid, aa[0], aa[1]));
 
                     //bi
-                    biPointerT.biPointerTable.add(new BiPointerTableItem(bedeputyid,item2.tupleid,classid,tupid));
+                    biPointerT.biPointerTable.add(new BiPointerTableItem(bedeputyid, item2.tupleid, classid, tupid));
 
                 }
             }
         }
-        for(ObjectTableItem item6:obj) {
+        for (ObjectTableItem item6 : obj) {
             topt.objectTable.add(item6);
         }
     }
-
 
 
     //CREATE CLASS dZ123 (nB1 int,nB2 char) ;
@@ -469,21 +471,20 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
         classt.maxid++;
         int classid = classt.maxid;
         for (int i = 0; i < count; i++) {
-            classt.classTable.add(new ClassTableItem(classname, classid, count,i,p[2 * i + 3], p[2 * i + 4],"ori"));
+            classt.classTable.add(new ClassTableItem(classname, classid, count, i, p[2 * i + 3], p[2 * i + 4], "ori"));
         }
     }
 
     //INSERT INTO aa VALUES (1,2,"3");
     //4,3,aa,1,2,"3"
     //0 1 2  3 4  5
-    private int Insert(String[] p){
+    private int Insert(String[] p) {
 
 
         int count = Integer.parseInt(p[1]);
-        for(int o =0;o<count+3;o++){
-            p[o] = p[o].replace("\"","");
+        for (int o = 0; o < count + 3; o++) {
+            p[o] = p[o].replace("\"", "");
         }
-
 
 
         String classname = p[2];
@@ -491,48 +492,47 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
 
         int classid = 0;
 
-        for(ClassTableItem item:classt.classTable)
-        {
-            if(item.classname.equals(classname)){
+        for (ClassTableItem item : classt.classTable) {
+            if (item.classname.equals(classname)) {
                 classid = item.classid;
             }
         }
 
-        for(int j = 0;j<count;j++){
-            tuple_[j] = p[j+3];
+        for (int j = 0; j < count; j++) {
+            tuple_[j] = p[j + 3];
         }
 
 
         Tuple tuple = new Tuple(tuple_);
-        tuple.tupleHeader=count;
+        tuple.tupleHeader = count;
 
         int[] a = InsertTuple(tuple);
         topt.maxTupleId++;
         int tupleid = topt.maxTupleId;
-        topt.objectTable.add(new ObjectTableItem(classid,tupleid,a[0],a[1]));
+        topt.objectTable.add(new ObjectTableItem(classid, tupleid, a[0], a[1]));
 
         //向代理类加元组
 
-        for(DeputyTableItem item:deputyt.deputyTable){
-            if(classid == item.originid){
+        for (DeputyTableItem item : deputyt.deputyTable) {
+            if (classid == item.originid) {
                 //判断代理规则
 
-                String attrtype=null;
-                int attrid=0;
-                for(ClassTableItem item1:classt.classTable){
-                    if(item1.classid == classid&&item1.attrname.equals(item.deputyrule[0])) {
+                String attrtype = null;
+                int attrid = 0;
+                for (ClassTableItem item1 : classt.classTable) {
+                    if (item1.classid == classid && item1.attrname.equals(item.deputyrule[0])) {
                         attrtype = item1.attrtype;
                         attrid = item1.attrid;
                         break;
                     }
                 }
 
-                if(Condition(attrtype,tuple,attrid,item.deputyrule[2])){
-                    String[] ss= p.clone();
+                if (Condition(attrtype, tuple, attrid, item.deputyrule[2])) {
+                    String[] ss = p.clone();
                     String s1 = null;
 
-                    for(ClassTableItem item2:classt.classTable){
-                        if(item2.classid == item.deputyid) {
+                    for (ClassTableItem item2 : classt.classTable) {
+                        if (item2.classid == item.deputyid) {
                             s1 = item2.classname;
                             break;
                         }
@@ -541,27 +541,27 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
                     //收集源类属性名
                     String[] attrname1 = new String[count];
                     int[] attrid1 = new int[count];
-                    int k=0;
-                    for(ClassTableItem item3 : classt.classTable){
-                        if(item3.classid == classid){
+                    int k = 0;
+                    for (ClassTableItem item3 : classt.classTable) {
+                        if (item3.classid == classid) {
                             attrname1[k] = item3.attrname;
                             attrid1[k] = item3.attrid;
                             k++;
 
-                            if (k ==count)
-                                    break;
+                            if (k == count)
+                                break;
                         }
                     }
-                    for (int l = 0;l<count;l++) {
+                    for (int l = 0; l < count; l++) {
                         for (SwitchingTableItem item4 : switchingT.switchingTable) {
-                            if (item4.attr.equals(attrname1[l])){
+                            if (item4.attr.equals(attrname1[l])) {
                                 //判断被置换的属性是否是代理类的
 
-                                for(ClassTableItem item8: classt.classTable){
-                                    if(item8.attrname.equals(item4.deputy)&&Integer.parseInt(item4.rule)!=0){
-                                        if(item8.classid==item.deputyid){
-                                            int sw = Integer.parseInt(p[3+attrid1[l]]);
-                                            ss[3+attrid1[l]] = new Integer(sw+Integer.parseInt(item4.rule)).toString();
+                                for (ClassTableItem item8 : classt.classTable) {
+                                    if (item8.attrname.equals(item4.deputy) && Integer.parseInt(item4.rule) != 0) {
+                                        if (item8.classid == item.deputyid) {
+                                            int sw = Integer.parseInt(p[3 + attrid1[l]]);
+                                            ss[3 + attrid1[l]] = new Integer(sw + Integer.parseInt(item4.rule)).toString();
                                             break;
                                         }
                                     }
@@ -573,10 +573,9 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
                     }
 
                     ss[2] = s1;
-                    int deojid=Insert(ss);
+                    int deojid = Insert(ss);
                     //插入Bi
-                    biPointerT.biPointerTable.add(new BiPointerTableItem(classid,tupleid,item.deputyid,deojid));
-
+                    biPointerT.biPointerTable.add(new BiPointerTableItem(classid, tupleid, item.deputyid, deojid));
 
 
                 }
@@ -585,35 +584,35 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
         return tupleid;
 
 
-
     }
 
-    private boolean Condition(String attrtype,Tuple tuple,int attrid,String value1){
-        String value = value1.replace("\"","");
-        switch (attrtype){
+    private boolean Condition(String attrtype, Tuple tuple, int attrid, String value1) {
+        String value = value1.replace("\"", "");
+        switch (attrtype) {
             case "int":
                 int value_int = Integer.parseInt(value);
-                if(Integer.parseInt((String)tuple.tuple[attrid])==value_int)
+                if (Integer.parseInt((String) tuple.tuple[attrid]) == value_int)
                     return true;
                 break;
             case "char":
                 String value_string = value;
-                if(tuple.tuple[attrid].equals(value_string))
+                if (tuple.tuple[attrid].equals(value_string))
                     return true;
                 break;
 
         }
         return false;
     }
+
     //DELETE FROM bb WHERE t4="5SS";
     //5,bb,t4,=,"5SS"
     private void Delete(String[] p) {
         String classname = p[1];
         String attrname = p[2];
         int classid = 0;
-        int attrid=0;
-        String attrtype=null;
-        for (ClassTableItem item:classt.classTable) {
+        int attrid = 0;
+        String attrtype = null;
+        for (ClassTableItem item : classt.classTable) {
             if (item.classname.equals(classname) && item.attrname.equals(attrname)) {
                 classid = item.classid;
                 attrid = item.attrid;
@@ -623,63 +622,63 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
         }
         //寻找需要删除的
         OandB ob2 = new OandB();
-        for (Iterator it1 = topt.objectTable.iterator(); it1.hasNext();){
-            ObjectTableItem item = (ObjectTableItem)it1.next();
-            if(item.classid == classid){
-                Tuple tuple = GetTuple(item.blockid,item.offset);
-                if(Condition(attrtype,tuple,attrid,p[4])){
+        for (Iterator it1 = topt.objectTable.iterator(); it1.hasNext(); ) {
+            ObjectTableItem item = (ObjectTableItem) it1.next();
+            if (item.classid == classid) {
+                Tuple tuple = GetTuple(item.blockid, item.offset);
+                if (Condition(attrtype, tuple, attrid, p[4])) {
                     //需要删除的元组
-                     OandB ob =new OandB(DeletebyID(item.tupleid));
-                    for(ObjectTableItem obj:ob.o){
+                    OandB ob = new OandB(DeletebyID(item.tupleid));
+                    for (ObjectTableItem obj : ob.o) {
                         ob2.o.add(obj);
                     }
-                    for(BiPointerTableItem bip:ob.b){
+                    for (BiPointerTableItem bip : ob.b) {
                         ob2.b.add(bip);
                     }
 
                 }
             }
         }
-        for(ObjectTableItem obj:ob2.o){
+        for (ObjectTableItem obj : ob2.o) {
             topt.objectTable.remove(obj);
         }
-        for(BiPointerTableItem bip:ob2.b) {
+        for (BiPointerTableItem bip : ob2.b) {
             biPointerT.biPointerTable.remove(bip);
         }
 
     }
 
-    private OandB DeletebyID(int id){
+    private OandB DeletebyID(int id) {
 
         List<ObjectTableItem> todelete1 = new ArrayList<>();
-        List<BiPointerTableItem>todelete2 = new ArrayList<>();
-        OandB ob = new OandB(todelete1,todelete2);
-        for (Iterator it1 = topt.objectTable.iterator(); it1.hasNext();){
-            ObjectTableItem item  = (ObjectTableItem)it1.next();
-            if(item.tupleid == id){
+        List<BiPointerTableItem> todelete2 = new ArrayList<>();
+        OandB ob = new OandB(todelete1, todelete2);
+        for (Iterator it1 = topt.objectTable.iterator(); it1.hasNext(); ) {
+            ObjectTableItem item = (ObjectTableItem) it1.next();
+            if (item.tupleid == id) {
                 //需要删除的tuple
 
 
                 //删除代理类的元组
                 int deobid = 0;
 
-                for(Iterator it = biPointerT.biPointerTable.iterator(); it.hasNext();){
-                    BiPointerTableItem item1 =(BiPointerTableItem) it.next();
-                    if(item.tupleid == item1.deputyobjectid){
+                for (Iterator it = biPointerT.biPointerTable.iterator(); it.hasNext(); ) {
+                    BiPointerTableItem item1 = (BiPointerTableItem) it.next();
+                    if (item.tupleid == item1.deputyobjectid) {
                         //it.remove();
-                      if(!todelete2.contains(item1))
+                        if (!todelete2.contains(item1))
                             todelete2.add(item1);
                     }
-                    if(item.tupleid == item1.objectid){
+                    if (item.tupleid == item1.objectid) {
                         deobid = item1.deputyobjectid;
-                        OandB ob2=new OandB(DeletebyID(deobid));
+                        OandB ob2 = new OandB(DeletebyID(deobid));
 
-                        for(ObjectTableItem obj:ob2.o){
-                            if(!todelete1.contains(obj))
+                        for (ObjectTableItem obj : ob2.o) {
+                            if (!todelete1.contains(obj))
                                 todelete1.add(obj);
                         }
-                        for(BiPointerTableItem bip:ob2.b){
-                            if(!todelete2.contains(bip))
+                        for (BiPointerTableItem bip : ob2.b) {
+                            if (!todelete2.contains(bip))
                                 todelete2.add(bip);
                         }
 
@@ -690,43 +689,40 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
 
 
                 //删除自身
-                DeleteTuple(item.blockid,item.offset);
-                if(!todelete2.contains(item));
-                    todelete1.add(item);
+                DeleteTuple(item.blockid, item.offset);
+                if (!todelete2.contains(item)) ;
+                todelete1.add(item);
 
 
-
-
-
-                }
             }
+        }
 
-            return ob;
+        return ob;
     }
 
     //DROP CLASS asd;
     //3,asd
 
-    private void Drop(String[]p){
+    private void Drop(String[] p) {
         List<DeputyTableItem> dti;
         dti = Drop1(p);
-        for(DeputyTableItem item:dti){
+        for (DeputyTableItem item : dti) {
             deputyt.deputyTable.remove(item);
         }
     }
 
-    private List<DeputyTableItem> Drop1(String[] p){
+    private List<DeputyTableItem> Drop1(String[] p) {
         String classname = p[1];
         int classid = 0;
         //找到classid顺便 清除类表和switch表
-        for (Iterator it1 = classt.classTable.iterator(); it1.hasNext();) {
-            ClassTableItem item =(ClassTableItem) it1.next();
-            if (item.classname.equals(classname) ){
+        for (Iterator it1 = classt.classTable.iterator(); it1.hasNext(); ) {
+            ClassTableItem item = (ClassTableItem) it1.next();
+            if (item.classname.equals(classname)) {
                 classid = item.classid;
-                for(Iterator it = switchingT.switchingTable.iterator(); it.hasNext();) {
-                    SwitchingTableItem item2 =(SwitchingTableItem) it.next();
-                    if (item2.attr.equals( item.attrname)||item2.deputy .equals( item.attrname)){
-                       it.remove();
+                for (Iterator it = switchingT.switchingTable.iterator(); it.hasNext(); ) {
+                    SwitchingTableItem item2 = (SwitchingTableItem) it.next();
+                    if (item2.attr.equals(item.attrname) || item2.deputy.equals(item.attrname)) {
+                        it.remove();
                     }
                 }
                 it1.remove();
@@ -734,51 +730,51 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
         }
         //清元组表同时清了bi
         OandB ob2 = new OandB();
-        for(ObjectTableItem item1:topt.objectTable){
-            if(item1.classid == classid){
+        for (ObjectTableItem item1 : topt.objectTable) {
+            if (item1.classid == classid) {
                 OandB ob = DeletebyID(item1.tupleid);
-                for(ObjectTableItem obj:ob.o){
+                for (ObjectTableItem obj : ob.o) {
                     ob2.o.add(obj);
                 }
-                for(BiPointerTableItem bip:ob.b){
+                for (BiPointerTableItem bip : ob.b) {
                     ob2.b.add(bip);
                 }
             }
         }
-        for(ObjectTableItem obj:ob2.o){
+        for (ObjectTableItem obj : ob2.o) {
             topt.objectTable.remove(obj);
         }
-        for(BiPointerTableItem bip:ob2.b) {
+        for (BiPointerTableItem bip : ob2.b) {
             biPointerT.biPointerTable.remove(bip);
         }
 
         //清deputy
         List<DeputyTableItem> dti = new ArrayList<>();
-        for(DeputyTableItem item3:deputyt.deputyTable){
-            if(item3.deputyid == classid){
-                if(!dti.contains(item3))
+        for (DeputyTableItem item3 : deputyt.deputyTable) {
+            if (item3.deputyid == classid) {
+                if (!dti.contains(item3))
                     dti.add(item3);
             }
-            if(item3.originid == classid){
+            if (item3.originid == classid) {
                 //删除代理类
-                String[]s = p.clone();
+                String[] s = p.clone();
                 List<String> sname = new ArrayList<>();
-                for(ClassTableItem item5: classt.classTable) {
+                for (ClassTableItem item5 : classt.classTable) {
                     if (item5.classid == item3.deputyid) {
                         sname.add(item5.classname);
                     }
                 }
-                for(String item4: sname){
+                for (String item4 : sname) {
 
-                        s[1] = item4;
-                        List<DeputyTableItem> dti2 = Drop1(s);
-                        for(DeputyTableItem item8:dti2){
-                            if(!dti.contains(item8))
-                                dti.add(item8);
-                        }
+                    s[1] = item4;
+                    List<DeputyTableItem> dti2 = Drop1(s);
+                    for (DeputyTableItem item8 : dti2) {
+                        if (!dti.contains(item8))
+                            dti.add(item8);
+                    }
 
                 }
-                if(!dti.contains(item3))
+                if (!dti.contains(item3))
                     dti.add(item3);
             }
         }
@@ -790,21 +786,21 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
     //SELECT  b1+2 AS c1,b2 AS c2,b3 AS c3 FROM  bb WHERE t1="1";
     //6,3,b1,1,2,c1,b2,0,0,c2,b3,0,0,c3,bb,t1,=,"1"
     //0 1 2  3 4 5  6  7 8 9  10 111213 14 15 16 17
-    private TupleList DirectSelect(String[] p){
+    private TupleList DirectSelect(String[] p) {
         TupleList tpl = new TupleList();
         int attrnumber = Integer.parseInt(p[1]);
         String[] attrname = new String[attrnumber];
         int[] attrid = new int[attrnumber];
-        String[] attrtype= new String[attrnumber];
-        String classname = p[2+4*attrnumber];
+        String[] attrtype = new String[attrnumber];
+        String classname = p[2 + 4 * attrnumber];
         int classid = 0;
-        for(int i = 0;i < attrnumber;i++){
-            for (ClassTableItem item:classt.classTable) {
-                if (item.classname.equals(classname) && item.attrname.equals(p[2+4*i])) {
+        for (int i = 0; i < attrnumber; i++) {
+            for (ClassTableItem item : classt.classTable) {
+                if (item.classname.equals(classname) && item.attrname.equals(p[2 + 4 * i])) {
                     classid = item.classid;
                     attrid[i] = item.attrid;
                     attrtype[i] = item.attrtype;
-                    attrname[i] = p[5+4*i];
+                    attrname[i] = p[5 + 4 * i];
                     //重命名
 
                     break;
@@ -815,8 +811,8 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
 
         int sattrid = 0;
         String sattrtype = null;
-        for (ClassTableItem item:classt.classTable) {
-            if (item.classid == classid && item.attrname.equals(p[3+4*attrnumber])) {
+        for (ClassTableItem item : classt.classTable) {
+            if (item.classid == classid && item.attrname.equals(p[3 + 4 * attrnumber])) {
                 sattrid = item.attrid;
                 sattrtype = item.attrtype;
                 break;
@@ -824,50 +820,46 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
         }
 
 
-        for(ObjectTableItem item : topt.objectTable){
-            if(item.classid == classid){
-                Tuple tuple = GetTuple(item.blockid,item.offset);
-                if(Condition(sattrtype,tuple,sattrid,p[4*attrnumber+5])){
+        for (ObjectTableItem item : topt.objectTable) {
+            if (item.classid == classid) {
+                Tuple tuple = GetTuple(item.blockid, item.offset);
+                if (Condition(sattrtype, tuple, sattrid, p[4 * attrnumber + 5])) {
                     //Switch
 
-                    for(int j = 0;j<attrnumber;j++){
-                        if(Integer.parseInt(p[3+4*j])==1){
-                            int value = Integer.parseInt(p[4+4*j]);
-                            int orivalue = Integer.parseInt((String)tuple.tuple[attrid[j]]);
-                            Object ob = value+orivalue;
+                    for (int j = 0; j < attrnumber; j++) {
+                        if (Integer.parseInt(p[3 + 4 * j]) == 1) {
+                            int value = Integer.parseInt(p[4 + 4 * j]);
+                            int orivalue = Integer.parseInt((String) tuple.tuple[attrid[j]]);
+                            Object ob = value + orivalue;
                             tuple.tuple[attrid[j]] = ob;
                         }
 
                     }
 
 
-
                     tpl.addTuple(tuple);
                 }
             }
         }
-        for(int i =0;i<attrnumber;i++){
-            attrid[i]=i;
+        for (int i = 0; i < attrnumber; i++) {
+            attrid[i] = i;
         }
-        PrintSelectResult(tpl,attrname,attrid,attrtype);
+        PrintSelectResult(tpl, attrname, attrid, attrtype);
         return tpl;
 
     }
 
 
-
-
-
     //SELECT popSinger -> singer.nation  FROM popSinger WHERE singerName = "JayZhou";
     //7,2,popSinger,singer,nation,popSinger,singerName,=,"JayZhou"
     //0 1 2         3      4      5         6          7  8
-    private TupleList InDirectSelect(String[] p){
-        TupleList tpl= new TupleList();
+    private TupleList InDirectSelect(String[] p) {
+        TupleList tpl = new TupleList();
         String classname = p[3];
         String attrname = p[4];
         String crossname = p[2];
         String[] attrtype = new String[1];
-        String[] con =new String[3];
+        String[] con = new String[3];
         con[0] = p[6];
         con[1] = p[7];
         con[2] = p[8];
@@ -876,30 +868,30 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
         int crossid = 0;
         String crossattrtype = null;
         int crossattrid = 0;
-        for(ClassTableItem item : classt.classTable){
-            if(item.classname.equals(classname)){
+        for (ClassTableItem item : classt.classTable) {
+            if (item.classname.equals(classname)) {
                 classid = item.classid;
-                if(attrname.equals(item.attrname))
-                    attrtype[0]=item.attrtype;
+                if (attrname.equals(item.attrname))
+                    attrtype[0] = item.attrtype;
             }
-            if(item.classname.equals(crossname)){
+            if (item.classname.equals(crossname)) {
                 crossid = item.classid;
-                if(item.attrname.equals(con[0])) {
+                if (item.attrname.equals(con[0])) {
                     crossattrtype = item.attrtype;
                     crossattrid = item.attrid;
                 }
             }
         }
 
-        for(ObjectTableItem item1:topt.objectTable){
-            if(item1.classid == crossid){
-                Tuple tuple = GetTuple(item1.blockid,item1.offset);
-                if(Condition(crossattrtype,tuple,crossattrid,con[2])){
-                    for(BiPointerTableItem item3: biPointerT.biPointerTable){
-                        if(item1.tupleid == item3.objectid&&item3.deputyid == classid){
-                            for(ObjectTableItem item2: topt.objectTable){
-                                if(item2.tupleid == item3.deputyobjectid){
-                                    Tuple ituple = GetTuple(item2.blockid,item2.offset);
+        for (ObjectTableItem item1 : topt.objectTable) {
+            if (item1.classid == crossid) {
+                Tuple tuple = GetTuple(item1.blockid, item1.offset);
+                if (Condition(crossattrtype, tuple, crossattrid, con[2])) {
+                    for (BiPointerTableItem item3 : biPointerT.biPointerTable) {
+                        if (item1.tupleid == item3.objectid && item3.deputyid == classid) {
+                            for (ObjectTableItem item2 : topt.objectTable) {
+                                if (item2.tupleid == item3.deputyobjectid) {
+                                    Tuple ituple = GetTuple(item2.blockid, item2.offset);
                                     tpl.addTuple(ituple);
                                 }
                             }
@@ -914,10 +906,8 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
         name[0] = attrname;
         int[] id = new int[1];
         id[0] = 0;
-        PrintSelectResult(tpl,name,id,attrtype);
+        PrintSelectResult(tpl, name, id, attrtype);
         return tpl;
-
-
 
 
     }
@@ -925,7 +915,7 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
     //UPDATE Song SET type = ‘jazz’WHERE songId = 100;
     //OPT_CREATE_UPDATE，Song，type，“jazz”，songId，=，100
     //0                  1     2      3        4      5  6
-    private void Update(String[] p){
+    private void Update(String[] p) {
         String classname = p[1];
         String attrname = p[2];
         String cattrname = p[4];
@@ -935,62 +925,61 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
         String attrtype = null;
         int cattrid = 0;
         String cattrtype = null;
-        for(ClassTableItem item :classt.classTable){
-            if (item.classname.equals(classname)){
+        for (ClassTableItem item : classt.classTable) {
+            if (item.classname.equals(classname)) {
                 classid = item.classid;
                 break;
             }
         }
-        for(ClassTableItem item1 :classt.classTable){
-            if (item1.classid==classid&&item1.attrname.equals(attrname)){
+        for (ClassTableItem item1 : classt.classTable) {
+            if (item1.classid == classid && item1.attrname.equals(attrname)) {
                 attrtype = item1.attrtype;
                 attrid = item1.attrid;
             }
         }
-        for(ClassTableItem item2 :classt.classTable){
-            if (item2.classid==classid&&item2.attrname.equals(cattrname)){
+        for (ClassTableItem item2 : classt.classTable) {
+            if (item2.classid == classid && item2.attrname.equals(cattrname)) {
                 cattrtype = item2.attrtype;
                 cattrid = item2.attrid;
             }
         }
 
 
-
-        for(ObjectTableItem item3:topt.objectTable){
-            if(item3.classid == classid){
-                Tuple tuple = GetTuple(item3.blockid,item3.offset);
-                if(Condition(cattrtype,tuple,cattrid,p[6])){
-                    UpdatebyID(item3.tupleid,attrid,p[3].replace("\"",""));
+        for (ObjectTableItem item3 : topt.objectTable) {
+            if (item3.classid == classid) {
+                Tuple tuple = GetTuple(item3.blockid, item3.offset);
+                if (Condition(cattrtype, tuple, cattrid, p[6])) {
+                    UpdatebyID(item3.tupleid, attrid, p[3].replace("\"", ""));
 
                 }
             }
         }
     }
 
-    private void UpdatebyID(int tupleid,int attrid,String value){
-        for(ObjectTableItem item: topt.objectTable){
-            if(item.tupleid ==tupleid){
-                Tuple tuple = GetTuple(item.blockid,item.offset);
+    private void UpdatebyID(int tupleid, int attrid, String value) {
+        for (ObjectTableItem item : topt.objectTable) {
+            if (item.tupleid == tupleid) {
+                Tuple tuple = GetTuple(item.blockid, item.offset);
                 tuple.tuple[attrid] = value;
-                UpateTuple(tuple,item.blockid,item.offset);
-                Tuple tuple1 = GetTuple(item.blockid,item.offset);
-                UpateTuple(tuple1,item.blockid,item.offset);
+                UpateTuple(tuple, item.blockid, item.offset);
+                Tuple tuple1 = GetTuple(item.blockid, item.offset);
+                UpateTuple(tuple1, item.blockid, item.offset);
             }
         }
 
         String attrname = null;
-        for(ClassTableItem item2: classt.classTable){
-            if (item2.attrid == attrid){
+        for (ClassTableItem item2 : classt.classTable) {
+            if (item2.attrid == attrid) {
                 attrname = item2.attrname;
                 break;
             }
         }
-        for(BiPointerTableItem item1: biPointerT.biPointerTable) {
+        for (BiPointerTableItem item1 : biPointerT.biPointerTable) {
             if (item1.objectid == tupleid) {
 
 
-                for(ClassTableItem item4:classt.classTable){
-                    if(item4.classid==item1.deputyid){
+                for (ClassTableItem item4 : classt.classTable) {
+                    if (item4.classid == item1.deputyid) {
                         String dattrname = item4.attrname;
                         int dattrid = item4.attrid;
                         for (SwitchingTableItem item5 : switchingT.switchingTable) {
@@ -1014,23 +1003,18 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
     }
 
 
+    //INSERT INTO aa VALUES (1,2,"3");
+    //4,3,aa,1,2,"3"
 
 
+    private class OandB {
+        public List<ObjectTableItem> o = new ArrayList<>();
+        public List<BiPointerTableItem> b = new ArrayList<>();
 
-        //INSERT INTO aa VALUES (1,2,"3");
-        //4,3,aa,1,2,"3"
+        public OandB() {
+        }
 
-
-
-
-
-
-
-    private class OandB{
-        public List<ObjectTableItem> o= new ArrayList<>();
-        public List<BiPointerTableItem> b= new ArrayList<>();
-        public OandB(){}
-        public OandB(OandB oandB){
+        public OandB(OandB oandB) {
             this.o = oandB.o;
             this.b = oandB.b;
         }
@@ -1042,35 +1026,33 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
     }
 
 
-
-
     private Tuple GetTuple(int id, int offset) {
 
-        return mem.readTuple(id,offset);
+        return mem.readTuple(id, offset);
     }
 
-    private int[] InsertTuple(Tuple tuple){
+    private int[] InsertTuple(Tuple tuple) {
         return mem.writeTuple(tuple);
     }
 
-    private void DeleteTuple(int id, int offset){
+    private void DeleteTuple(int id, int offset) {
         mem.deleteTuple();
         return;
     }
 
-    private void UpateTuple(Tuple tuple,int blockid,int offset){
-        mem.UpateTuple(tuple,blockid,offset);
+    private void UpateTuple(Tuple tuple, int blockid, int offset) {
+        mem.UpateTuple(tuple, blockid, offset);
     }
 
-    private void PrintTab(ObjectTable topt,SwitchingTable switchingT,DeputyTable deputyt,BiPointerTable biPointerT,ClassTable classTable) {
+    private void PrintTab(ObjectTable topt, SwitchingTable switchingT, DeputyTable deputyt, BiPointerTable biPointerT, ClassTable classTable) {
         Intent intent = new Intent(context, ShowTable.class);
 
         Bundle bundle0 = new Bundle();
-        bundle0.putSerializable("ObjectTable",topt);
-        bundle0.putSerializable("SwitchingTable",switchingT);
-        bundle0.putSerializable("DeputyTable",deputyt);
-        bundle0.putSerializable("BiPointerTable",biPointerT);
-        bundle0.putSerializable("ClassTable",classTable);
+        bundle0.putSerializable("ObjectTable", topt);
+        bundle0.putSerializable("SwitchingTable", switchingT);
+        bundle0.putSerializable("DeputyTable", deputyt);
+        bundle0.putSerializable("BiPointerTable", biPointerT);
+        bundle0.putSerializable("ClassTable", classTable);
         intent.putExtras(bundle0);
         context.startActivity(intent);
 
@@ -1091,8 +1073,9 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
 
 
     }
-    public void PrintTab(){
-        PrintTab(topt,switchingT,deputyt,biPointerT,classt);
+
+    public void PrintTab() {
+        PrintTab(topt, switchingT, deputyt, biPointerT, classt);
     }
 }
 

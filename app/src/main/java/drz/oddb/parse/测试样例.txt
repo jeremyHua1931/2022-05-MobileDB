@@ -3,7 +3,8 @@ INSERT INTO company VALUES ("aa",20,1000);
 SELECT name AS name1,  age AS age1 FROM  company WHERE name="aa";
 
 
-CREATE SELECTDEPUTY nandb SELECT name AS n1,age AS birth,salary AS s1 FROM company WHERE age=20;
+CREATE SELECTDEPUTY nandb SELECT name AS n1,age AS birth,salary AS s1 FROM company1 WHERE age=20;
+CREATE SELECTDEPUTY nandb SELECT name AS n1,age AS birth,salary AS s1 FROM company1 WHERE name="aa";
 
 
 CREATE CLASS company1 (name char,age int, salary int);
@@ -12,9 +13,18 @@ CREATE CLASS company2 (name char,age int, salary int);
 CREATE UNIONDEPUTYCLASS allAPP
 AS
 (
-SELECT name AS nameNew,  age AS ageNew FROM  company1 WHERE name1="aa"
+SELECT name AS nameNew,  age AS ageNew FROM  company1 WHERE name="aa"
 UNION
-SELECT name AS nameNew,  age AS ageNew FROM  company2 WHERE name2="aa"
+SELECT name AS nameNew,  age AS ageNew FROM  company2 WHERE name="aa"
+);
+
+
+CREATE UNIONDEPUTYCLASS allAPP
+AS
+(
+SELECT name AS nameNew,  age AS ageNew FROM  company1 WHERE age=20
+UNION
+SELECT name AS nameNew,  age AS ageNew FROM  company2 WHERE age=20
 );
 
 INSERT INTO company VALUES ("bb",30,8000);
