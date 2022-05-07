@@ -6,18 +6,72 @@ SELECT name AS name1,  age AS age1 FROM  company WHERE name="aa";
 CREATE SELECTDEPUTY nandb SELECT name AS n1,age AS birth,salary AS s1 FROM company1 WHERE age=20;
 CREATE SELECTDEPUTY nandb SELECT name AS n1,age AS birth,salary AS s1 FROM company1 WHERE name="aa";
 
+SELECT n1 AS nameTest, birth AS test FROM nandb WHERE name="aa";
+SELECT name AS nameTest, age AS test FROM company1 WHERE name="aa";
+
 
 CREATE CLASS company1 (name char,age int, salary int);
 CREATE CLASS company2 (name char,age int, salary int);
 
+
+
+
+
+//已经预置命令
+CREATE CLASS company1 (name char,age int, salary int);
+CREATE CLASS company2 (name char,age int, salary int);
+INSERT INTO company VALUES ("aa",20,1000);
+INSERT INTO company VALUES ("bb",20,1000);
+
+
+//开始测试
 CREATE UNIONDEPUTYCLASS allAPP
 AS
 (
-SELECT name AS nameNew,  age AS ageNew FROM  company1 WHERE name="aa"
+SELECT name AS nameNew,  age AS ageNew FROM  company1 WHERE age=20
 UNION
-SELECT name AS nameNew,  age AS ageNew FROM  company2 WHERE name="aa"
+SELECT name AS nameNew,  age AS ageNew FROM  company2 WHERE age=20
 );
 
+//结果
+返回  aa 20
+      bb 20
+
+SELECT nameNew AS test,  ageNew AS test FROM allAPP WHERE ageNew=20;
+
+
+
+CREATE CLASS baidu     (user char, travel char,startX int, startY int, endX int , endY int);
+CREATE CLASS didi     (user char, travel char,startX int, startY int, endX int , endY int);
+
+
+INSERT INTO baidu VALUES ("whu","baidu",23,34,25,56);
+INSERT INTO didi VALUES ("whu","didi",100,101,103,156);
+
+CREATE UNIONDEPUTYCLASS allAPP
+AS
+(
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  baidu WHERE user="whu"
+UNION
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  didi WHERE user="whu"
+);
+
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  allAPP WHERE user="whu";
+
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  didi WHERE user="whu";
+
+
+
+
+
+
+
+SELECT n1 AS names,birth AS births,s1 AS salarys FROM nandb WHERE n1="gg";
+
+
+
+
+SELECT name AS nameTest , age AS ageTest FROM company1 WHERE age=20;
 
 CREATE UNIONDEPUTYCLASS allAPP
 AS
@@ -26,6 +80,26 @@ SELECT name AS nameNew,  age AS ageNew FROM  company1 WHERE age=20
 UNION
 SELECT name AS nameNew,  age AS ageNew FROM  company2 WHERE age=20
 );
+
+SELECT name AS nameTest , age AS ageTest FROM company1 WHERE age=20;
+SELECT name AS nameTest , age AS ageTest FROM company2 WHERE age=20;
+
+
+SELECT nameNew AS test,  ageNew AS test FROM allAPP WHERE ageNew=20;
+
+
+
+SELECT name AS nameTest,  age AS test FROM company1 WHERE name="aa";
+
+
+
+
+
+SELECT name AS nameTest,  age AS test FROM company1 WHERE age=20;
+SELECT name AS nameTest,  age AS test FROM company2 WHERE age=20;
+
+
+
 
 INSERT INTO company VALUES ("bb",30,8000);
 INSERT INTO company VALUES ("cc",30,8000);
@@ -53,6 +127,8 @@ DELETE FROM company WHERE name="aa";
 UPDATE company SET salary=8000 WHERE name="gg";
 //查
 SELECT n1 AS names,birth AS births,s1 AS salarys FROM nandb WHERE n1="gg";
+
+SELECT name AS nameTest,  age AS Test FROM  allAPP WHERE name="aa";
 
 
 //跨类查询

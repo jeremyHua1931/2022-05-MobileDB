@@ -123,7 +123,7 @@ public class TransAction {
                 String[] company1CreateTmp = new String[]{"1", "3", "company1", "name", "char", "age", "int", "salary", "int"};
                 String[] company2CreateTmp = new String[]{"1", "3", "company2", "name", "char", "age", "int", "salary", "int"};
                 String[] company1InsertTmp = new String[]{"4", "3", "company1", "aa", "20", "1000"};
-                String[] company2InsertTmp = new String[]{"4", "3", "company2", "aa", "20", "1000"};
+                String[] company2InsertTmp = new String[]{"4", "3", "company2", "bb", "20", "1000"};
 
                 CreateOriginClass(company1CreateTmp);
                 CreateOriginClass(company2CreateTmp);
@@ -300,20 +300,26 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
         classt.maxid++;
 
         int classid = classt.maxid; //代理类的id
-        int bedeputyid = -1; //被代理的类的id
+        int[] bedeputyid = new int[Integer.parseInt(selectCount)]; //被代理的类的id
+
+
+
+        int[] bedeputyattrid = new int[Integer.parseInt(attrCount)];
 
         System.out.println("由于所有新属性名在所有的select中保持一致,选择第一个select语句, 即: ");
         System.out.println(Arrays.toString(selectALL[0]));
 
         String beDeputyName = selectALL[0][OneSelect - 2];
-        System.out.println("被代理类的名字是" + beDeputyName);
+
 
 
         for (int i = 0; i < Integer.parseInt(attrCount); i++) {
             for (ClassTableItem item : classt.classTable) {
                 //遍历到的类名等于被代理的类名且属性名等于第一个被选择的代理属性名(依次选择),增加代理类新属性名到classt表上
                 if (item.classname.equals(beDeputyName) && item.attrname.equals(selectALL[0][4 * i + 2])) {
-                    bedeputyid = item.classid;
+
+
+                    bedeputyattrid[i] = item.attrid;
 
                     classt.classTable.add(new ClassTableItem(unionDeputyName, classid, Integer.parseInt(attrCount), attrid[i], NewAttr[i], item.attrtype, "de"));
 
@@ -329,19 +335,109 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
             }
         }
 
+        for(int i=0;i<Integer.parseInt(selectCount);i++)
+        {
+            System.out.println("被代理类的名字是" + selectALL[i][OneSelect - 2]);
+            for (ClassTableItem item : classt.classTable) {
+                if (item.classname.equals(selectALL[i][OneSelect - 2])) {
+                    bedeputyid[i] = item.classid;
+                    System.out.println("此时为  "+item.classid);
+                    break;
+                }
+            }
+        }
+
+
+        System.out.println("============================="+Arrays.toString(bedeputyattrid));
+        System.out.println("============================="+Arrays.toString(bedeputyid));
+
+
         //2-修改deputyTable
-        String[][] condition= new String[Integer.parseInt(selectCount)][3];
-        for(int i=0;i<Integer.parseInt(selectCount);i++){
-            condition[i][2]=selectALL[i][OneSelect+1];
+        String[][] condition = new String[Integer.parseInt(selectCount)][3];
+        for (int i = 0; i < Integer.parseInt(selectCount); i++) {
+            condition[i][2] = selectALL[i][OneSelect + 1];
 //            String s=condition[i][2];
 //            s=s.replace("\"","");
 //            condition[i][2]=s;
 //            System.out.println(condition[i][2]);
-            condition[i][1]=selectALL[i][OneSelect];
-            condition[i][0]=selectALL[i][OneSelect-1];
-            deputyt.deputyTable.add(new DeputyTableItem(bedeputyid,classid,condition[i]));
+            condition[i][1] = selectALL[i][OneSelect];
+            condition[i][0] = selectALL[i][OneSelect - 1];
+            deputyt.deputyTable.add(new DeputyTableItem(bedeputyid[i], classid, condition[i]));
             System.out.println("打印第: " + (i + 1) + " 个where");
             System.out.println(Arrays.toString(condition[i]));
+        }
+
+        //3-修改objectTable和BiPointTable
+
+        TupleList tpl = new TupleList();
+
+        int[] conid = new int[Integer.parseInt(selectCount)];
+        String[] contype = new String[Integer.parseInt(selectCount)];
+
+        for (int i = 0; i < Integer.parseInt(selectCount); i++) {
+            for (ClassTableItem item3 : classt.classTable) {
+                if (item3.attrname.equals(condition[i][0])) {
+                    conid[i] = item3.attrid;
+                    contype[i] = item3.attrtype;
+                    break;
+                }
+            }
+        }
+
+        System.out.println("所有Where所选择的属性在其类属性的排名位置: " + Arrays.toString(conid));
+        System.out.println("所有Where所选择的属性的类型: " + Arrays.toString(contype));
+
+
+        List<ObjectTableItem> obj = new ArrayList<>();
+
+        for (int i = 0; i < Integer.parseInt(selectCount); i++) {
+            System.out.println("开始选择第 "+(i+1)+" 个类");
+
+            for (ObjectTableItem item2 : topt.objectTable) {
+                System.out.println("第 "+(i+1)+" 次遍历object表");
+                System.out.println("classid= " +item2.classid);
+                System.out.println("第一个被代理类id是 "+ bedeputyid[i]);
+
+                if (item2.classid == bedeputyid[i]) {
+                    Tuple tuple = GetTuple(item2.blockid, item2.offset);
+
+                    System.out.println("取出的元组是"+Arrays.toString(tuple.tuple));
+                    if (Condition(contype[i], tuple, conid[i], condition[i][2])) {
+
+                        Tuple ituple = new Tuple();
+                        ituple.tupleHeader = Integer.parseInt(attrCount);
+                        ituple.tuple = new Object[Integer.parseInt(attrCount)];
+
+                        for (int o = 0; o < Integer.parseInt(attrCount); o++) {
+                            if (Integer.parseInt(selectALL[i][3 + 4 * o]) == 1) {
+                                int value = Integer.parseInt(selectALL[i][4 + 4 * o]);
+                                int orivalue = Integer.parseInt((String) tuple.tuple[bedeputyattrid[o]]);
+                                Object ob = value + orivalue;
+                                ituple.tuple[o] = ob;
+                            }
+
+                            System.out.println("++++++++++++++++++++++++-------------"+bedeputyattrid[o]);
+
+                            if (Integer.parseInt(selectALL[i][3 + 4 * o]) == 0) {
+                                System.out.println("+++++++++++++++++" + tuple.tuple[bedeputyattrid[o]]);
+                                ituple.tuple[o] = tuple.tuple[bedeputyattrid[o]];
+                            }
+                        }
+
+                        topt.maxTupleId++;
+                        int tupid = topt.maxTupleId;
+                        int[] aa = InsertTuple(ituple);
+                        obj.add(new ObjectTableItem(classid, tupid, aa[0], aa[1]));
+                        biPointerT.biPointerTable.add(new BiPointerTableItem(bedeputyid[i], item2.tupleid, classid, tupid));
+
+                    }
+                }
+            }
+
+        }
+
+        for (ObjectTableItem item6 : obj) {
+            topt.objectTable.add(item6);
         }
 
 
@@ -812,13 +908,23 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
         int sattrid = 0;
         String sattrtype = null;
         for (ClassTableItem item : classt.classTable) {
+//            System.out.println("----"+item.classid);
+//            System.out.println("---"+classid);
+//            System.out.println("------"+item.attrname);
+//            System.out.println("-----"+p[3 + 4 * attrnumber]);
             if (item.classid == classid && item.attrname.equals(p[3 + 4 * attrnumber])) {
+//                System.out.println("---------++++"+item.classid);
+//                System.out.println("---------++++"+classid);
+//                System.out.println("---------++++"+item.attrname);
+//                System.out.println("---------++++"+p[3 + 4 * attrnumber]);
+
                 sattrid = item.attrid;
                 sattrtype = item.attrtype;
                 break;
             }
         }
 
+        System.out.println("---------------------" + sattrtype);
 
         for (ObjectTableItem item : topt.objectTable) {
             if (item.classid == classid) {
