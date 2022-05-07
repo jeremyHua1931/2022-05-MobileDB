@@ -109,8 +109,31 @@ public class TransAction {
         try {
             String[] aa = p.Run();
 
+            //预置插入
+
+
+
             System.out.println("打印");
             System.out.println(Arrays.toString(aa));
+
+            if(classt.startTmp==0){
+                classt.startTmp++;
+                System.out.println("第一次执行时,预置插入下列命令");
+                System.out.println("CREATE CLASS company (name char,age int, salary int);\n" +
+                        "INSERT INTO company VALUES (\"aa\",20,1000);");
+
+                String[] company1CreateTmp=new String[]{"1", "3", "company1", "name", "char", "age", "int", "salary", "int"};
+                String[] company2CreateTmp=new String[]{"1", "3", "company2", "name", "char", "age", "int", "salary", "int"};
+                String[] company1InsertTmp=new String[]{"4", "3", "company1", "aa", "20", "1000"};
+                String[] company2InsertTmp=new String[]{"4", "3", "company2", "aa", "20", "1000"};
+
+                CreateOriginClass(company1CreateTmp);
+                CreateOriginClass(company2CreateTmp);
+                Insert(company1InsertTmp);
+                Insert(company2InsertTmp);
+            }
+
+
 
             switch (Integer.parseInt(aa[0])) {
                 case parse.OPT_CREATE_ORIGINCLASS:
@@ -130,7 +153,6 @@ public class TransAction {
                     break;
                 case parse.OPT_INSERT:
                     log.WriteLog(s);
-
                     Insert(aa);
                     new AlertDialog.Builder(context).setTitle("提示").setMessage("插入成功").setPositiveButton("确定",null).show();
                     break;
@@ -191,14 +213,32 @@ public class TransAction {
         System.out.println("select 个数是: "+selectCount);
         System.out.println("每一个select占用的数组位置个数: "+ OneSelect);
 
-
+        /*
+I/System.out: 第一次执行时,预置插入下列命令
+I/System.out: CREATE CLASS company (name char,age int, salary int);
+I/System.out: INSERT INTO company VALUES ("aa",20,1000);
+I/System.out: 进入创建union代理类
+I/System.out: 开始创建union代理类,执行数组:[9, 2, 2, allAPP, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa", name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
+I/System.out: 操作符是： 9
+I/System.out: 新代理类名称: allAPP
+I/System.out: 代理类属性个数: 2
+I/System.out: select 个数是: 2
+I/System.out: 每一个select占用的数组位置个数: 12
+I/System.out: 打印第: 1 个select部分
+I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
+I/System.out: 打印第: 2 个select部分
+I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
+         */
 
         //拆分select数组
-        String[] oddAttr=new String[Integer.parseInt(attrCount)];
-        String[] NewAttr=new String[Integer.parseInt(attrCount)];
-
-
+        //selectALL 每一行即一个select语句执行命令
         String [][]  selectALL=new String[Integer.parseInt(selectCount)][OneSelect+2];
+
+        //新代理类属性名
+        String[] NewAttr=new String[Integer.parseInt(attrCount)];
+        //每一行即一个select语句原属性名
+        String[][] oldAttr= new String[Integer.parseInt(selectCount)][Integer.parseInt(attrCount)];
+
 
         for(int i=0;i<Integer.parseInt(selectCount);i++){
 
@@ -211,6 +251,23 @@ public class TransAction {
             System.out.println(Arrays.toString(selectALL[i]));
         }
 
+        for(int i=0;i<Integer.parseInt(selectCount);i++) {
+
+            for(int j=0;j<Integer.parseInt(attrCount);j++){
+                oldAttr[i][j]=selectALL[i][4*j+2];
+            }
+            System.out.println("打印第: "+(i+1)+" 个select 旧属性名");
+            System.out.println(Arrays.toString(oldAttr[i]));
+        }
+
+
+        int[] attrid=new int [Integer.parseInt(attrCount)];
+        for(int i=0;i<Integer.parseInt(attrCount);i=i+1){
+            NewAttr[i]=selectALL[0][4*i+5];
+            attrid[i]=i;
+        }
+        System.out.println("新属性数组: "+ Arrays.toString(NewAttr));
+        System.out.println("新属性数组id: "+ Arrays.toString(attrid));
 
         //创建新的代理类,循环执行select,并将获取返回结果,将其插入新建的代理类中
         /*
@@ -230,7 +287,7 @@ public class TransAction {
                    描述新代理类属性和被选择的代理类的对应关系 (一个新属性可能对应多个旧属性名,依次排列即可, 应该保证 attr和deputy作为switchTable表主键,不重复)
             第四步: 修改ObjectTable
                    将select所有选择出的结果插入代理类中,同时更新object表的元组存储状态
-            第五布: 修改 BitPointer
+            第五布: 修改BitPointer
                    记录原类中元组和新代理类中新元组 id之间的对应关系
 
          (3)元组真实数据的存储
@@ -238,6 +295,47 @@ public class TransAction {
             在修改objectTable中涉及如何取出真实数据和如何存放新数据??
 
          */
+
+        //1-修改ClassTable
+
+        System.out.println("开始修改ClassTable");
+        //给新生成的代理类分配类id,默认在原有的基础上加1;
+        classt.maxid++;
+
+        int classid=classt.maxid; //代理类的id
+        int bedeputyid=-1; //被代理的类的id
+
+        System.out.println("由于所有新属性名在所有的select中保持一致,选择第一个select语句, 即: ");
+        System.out.println(Arrays.toString(selectALL[0]));
+
+        String beDeputyName =selectALL[0][OneSelect-2];
+        System.out.println("被代理类的名字是" +beDeputyName);
+
+
+
+            for (int i = 0; i < Integer.parseInt(attrCount); i++) {
+                for (ClassTableItem item : classt.classTable) {
+                    //遍历到的类名等于被代理的类名且属性名等于第一个被选择的代理属性名(依次选择),增加代理类新属性名到classt表上
+                    if (item.classname.equals(beDeputyName) && item.attrname.equals(selectALL[0][4 * i + 2])) {
+                        bedeputyid = item.classid;
+
+                        classt.classTable.add(new ClassTableItem(unionDeputyName, classid, Integer.parseInt(attrCount), attrid[i], NewAttr[i], item.attrtype, "de"));
+
+                        //修改SwitchingTable, 几个select执行几次
+                        if (Integer.parseInt(selectALL[0][3 + 4 * i]) == 1) {
+                            switchingT.switchingTable.add(new SwitchingTableItem(item.attrname, NewAttr[i], selectALL[0][4 + 4 * i]));
+                        }
+                        if (Integer.parseInt(selectALL[0][3 + 4 * i]) == 0) {
+                            switchingT.switchingTable.add(new SwitchingTableItem(item.attrname, NewAttr[i], "0"));
+                        }
+                        break;
+                    }
+                }
+
+            }
+
+
+
 
 
 
@@ -255,7 +353,7 @@ public class TransAction {
         String classname = p[2];//代理类的名字
         //被代理的类的名称
         String bedeputyname = p[4*count+3];//代理的类的名字
-        //未知
+
         classt.maxid++;
         int classid = classt.maxid;//代理类的id
         int bedeputyid = -1;//代理的类的id
@@ -305,6 +403,8 @@ public class TransAction {
         deputyt.deputyTable.add(new DeputyTableItem(bedeputyid,classid,con));
 
 
+
+
         TupleList tpl= new TupleList();
 
         int conid = 0;
@@ -316,6 +416,8 @@ public class TransAction {
                 break;
             }
         }
+
+
         List<ObjectTableItem> obj = new ArrayList<>();
         for(ObjectTableItem item2:topt.objectTable){
             if(item2.classid ==bedeputyid){

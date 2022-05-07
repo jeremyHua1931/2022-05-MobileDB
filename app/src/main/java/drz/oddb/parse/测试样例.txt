@@ -1,6 +1,21 @@
 CREATE CLASS company (name char,age int, salary int);
 INSERT INTO company VALUES ("aa",20,1000);
-CREATE SELECTDEPUTY nandb SELECT name AS n1,age+5 AS birth,salary AS s1 FROM company WHERE age=20;
+SELECT name AS name1,  age AS age1 FROM  company WHERE name="aa";
+
+
+CREATE SELECTDEPUTY nandb SELECT name AS n1,age AS birth,salary AS s1 FROM company WHERE age=20;
+
+
+CREATE CLASS company1 (name char,age int, salary int);
+CREATE CLASS company2 (name char,age int, salary int);
+
+CREATE UNIONDEPUTYCLASS allAPP
+AS
+(
+SELECT name AS nameNew,  age AS ageNew FROM  company1 WHERE name1="aa"
+UNION
+SELECT name AS nameNew,  age AS ageNew FROM  company2 WHERE name2="aa"
+);
 
 INSERT INTO company VALUES ("bb",30,8000);
 INSERT INTO company VALUES ("cc",30,8000);
@@ -13,6 +28,8 @@ INSERT INTO company4 VALUES ("bb",30,8000);
 
 //虚属性
 //创建代理类
+CREATE SELECTDEPUTY nandb SELECT name AS n1,age AS birth,salary AS s1 FROM company WHERE age=20;
+
 CREATE SELECTDEPUTY nandb SELECT name AS n1,age+5 AS birth,salary AS s1 FROM company WHERE age=20;
 
 CREATE SELECTDEPUTY nands SELECT name AS n,salary+10 AS s FROM company WHERE salary=1000;
@@ -131,11 +148,7 @@ AS
 (
 SELECT user1 AS user, travel AS travel ,startX AS startX FROM  baidu WHERE user="whu"
 UNION
-SELECT user2 AS user, travel AS travel ,startX AS startX FROM  baidu WHERE user="whu"
-UNION
-SELECT user3 AS user, travel AS travel ,startX AS startX FROM  baidu WHERE user="whu"
-UNION
-SELECT user4 AS user, travel AS travel ,startX AS startX FROM  baidu WHERE user="whu"
+SELECT user1 AS user, travel AS travel ,startX AS startX FROM  baidu WHERE user="whu"
 );
 
 CREATE UNIONDEPUTYCLASS allAPP
@@ -148,4 +161,29 @@ UNION
 SELECT user AS user, travel AS travel ,startX AS startX FROM  baidu WHERE user="whu"
 UNION
 SELECT user AS user, travel AS travel ,startX AS startX FROM  baidu WHERE user="whu"
+);
+
+
+
+CREATE CLASS baidu     (user char, travel char,startX int, startY int, endX int , endY int);
+
+CREATE UNIONDEPUTYCLASS allAPP
+AS
+(
+SELECT user AS userNew, travel AS travelNew ,startX AS startXNew, startY AS startYNew, endX AS endXNew, endY AS endYNew FROM  baidu WHERE user="whu"
+UNION
+SELECT user AS userNew, travel AS travelNew ,startX AS startXNew, startY AS startYNew, endX AS endXNew, endY AS endYNew FROM  didi WHERE user="whu"
+);
+
+
+CREATE UNIONDEPUTYCLASS allAPP
+AS
+(
+SELECT user1 AS user, travel AS travel ,startX AS startX FROM  baidu WHERE user="whu"
+UNION
+SELECT user2 AS user, travel AS travel ,startX8 AS startX FROM  baidu WHERE user="whu"
+UNION
+SELECT use3 AS user, travel AS travel ,startX AS startX FROM  baidu WHERE user="whu"
+UNION
+SELECT user4 AS user, travel AS travel ,startX9 AS startX FROM  baidu WHERE user="whu"
 );
