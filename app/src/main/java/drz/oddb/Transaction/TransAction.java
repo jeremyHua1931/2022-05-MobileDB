@@ -114,7 +114,7 @@ public class TransAction {
             System.out.println("打印");
             System.out.println(Arrays.toString(aa));
 
-            if (classt.startTmp == 0) {
+            if (classt.startTmp == 1000) {
                 classt.startTmp++;
                 System.out.println("第一次执行时,预置插入下列命令");
                 System.out.println("CREATE CLASS company (name char,age int, salary int);\n" +
@@ -787,6 +787,7 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
                 //删除自身
                 DeleteTuple(item.blockid, item.offset);
                 if (!todelete2.contains(item)) ;
+                //TODO !todelete1.contains(item)
                 todelete1.add(item);
 
 

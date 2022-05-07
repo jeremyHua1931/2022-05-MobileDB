@@ -41,22 +41,35 @@ SELECT nameNew AS test,  ageNew AS test FROM allAPP WHERE ageNew=20;
 
 
 
-CREATE CLASS baidu     (user char, travel char,startX int, startY int, endX int , endY int);
+CREATE CLASS baidu    (user char, travel char,startX int, startY int, endX int , endY int);
 CREATE CLASS didi     (user char, travel char,startX int, startY int, endX int , endY int);
+CREATE CLASS nike     (user char, travel char,startX int, startY int, endX int , endY int);
+CREATE CLASS addi     (user char, travel char,startX int, startY int, endX int , endY int);
 
 
-INSERT INTO baidu VALUES ("whu","baidu",23,34,25,56);
-INSERT INTO didi VALUES ("whu","didi",100,101,103,156);
+INSERT INTO baidu VALUES ("whu","1",23,34,25,56);
+INSERT INTO didi VALUES  ("whu","2",100,101,103,156);
+INSERT INTO nike VALUES  ("whu","3",200,201,203,256);
+INSERT INTO addi VALUES  ("whu","4",300,301,303,356);
 
-CREATE UNIONDEPUTYCLASS allAPP
+CREATE UNIONDEPUTYCLASS allAPP2
 AS
 (
-SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  baidu WHERE user="whu"
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  allAPP WHERE user="whu"
 UNION
 SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  didi WHERE user="whu"
+UNION
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  nike WHERE user="whu"
+UNION
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  addi WHERE user="whu"
 );
 
-SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  allAPP WHERE user="whu";
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  allAPP2 WHERE user="whu";
+
+
+UPDATE  SET salary=8000 WHERE name="gg";
+
+
 
 SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  didi WHERE user="whu";
 
