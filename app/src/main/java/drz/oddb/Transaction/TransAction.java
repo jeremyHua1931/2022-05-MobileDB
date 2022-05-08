@@ -17,6 +17,7 @@ import drz.oddb.Log.*;
 import drz.oddb.Memory.*;
 
 
+import drz.oddb.TravelActivity;
 import drz.oddb.show.PrintResult;
 import drz.oddb.show.ShowTable;
 import drz.oddb.Transaction.SystemTable.*;
@@ -102,22 +103,23 @@ public class TransAction {
         return true;
     }
 
-    public void  presetCommand(){
+    public void  presetCommand1(){
 
-            System.out.println("第一次执行时,预置插入下列命令");
-            clearALL();
-            query("CREATE CLASS company1 (name char,age int, salary int);");
-            query("CREATE CLASS company2 (name char,age int, salary int);");
-            query("INSERT INTO company1 VALUES (\"aa\",20,1000);");
-            query("INSERT INTO company1 VALUES (\"cc\",20,1000);");
-            query("INSERT INTO company2 VALUES (\"bb\",20,1000);");
-            query("CREATE UNIONDEPUTYCLASS company3\n" +
-                    "AS\n" +
-                    "(\n" +
-                    "SELECT name AS nameNew1,  age AS ageNew1 FROM  company1 WHERE age=20\n" +
-                    "UNION\n" +
-                    "SELECT name AS nameNew1,  age AS ageNew2 FROM  company2 WHERE age=20\n" +
-                    ");");
+//        new AlertDialog.Builder(context).setTitle("提示").setMessage("执行预置命令2").setPositiveButton("确定", null).show();
+        System.out.println("第一次执行时,预置插入下列命令");
+        clearALL();
+        query("CREATE CLASS company1 (name char,age int, salary int);");
+        query("CREATE CLASS company2 (name char,age int, salary int);");
+        query("INSERT INTO company1 VALUES (\"aa\",20,1000);");
+        query("INSERT INTO company1 VALUES (\"cc\",20,1000);");
+        query("INSERT INTO company2 VALUES (\"bb\",20,1000);");
+        query("CREATE UNIONDEPUTYCLASS company3\n" +
+                "AS\n" +
+                "(\n" +
+                "SELECT name AS nameNew1,  age AS ageNew1 FROM  company1 WHERE age=20\n" +
+                "UNION\n" +
+                "SELECT name AS nameNew1,  age AS ageNew2 FROM  company2 WHERE age=20\n" +
+                ");");
 //            query("CREATE UNIONDEPUTYCLASS company4\n" +
 //                    "AS\n" +
 //                    "(\n" +
@@ -126,14 +128,16 @@ public class TransAction {
 //                    "SELECT nameNew1 AS nameNew2,  ageNew1 AS ageNew2 FROM  company3 WHERE age=20\n" +
 //                    ");");
 
-
-            System.out.println("预置命令插入成功");
-            Toast.makeText(context.getApplicationContext(), "预置命令执行成功",Toast.LENGTH_SHORT).show();
+        query("SELECT nameNew1 AS testCompany3,  ageNew1 AS testCompany3 FROM company3 WHERE ageNew1=20;");
+        System.out.println("预置命令插入成功");
+        Toast.makeText(context.getApplicationContext(), "预置命令执行成功",Toast.LENGTH_SHORT).show();
 
     }
 
     public void  presetCommand2(){
 
+
+//        new AlertDialog.Builder(context).setTitle("提示").setMessage("执行预置命令2").setPositiveButton("确定", null).show();
         System.out.println("第一次执行时,预置插入轨迹命令");
         clearALL();
         //轨迹预置命令
@@ -158,7 +162,7 @@ public class TransAction {
                 "UNION\n" +
                 "SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  addi WHERE user=\"whu\"\n" +
                 ");");
-        query("SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  allAPP WHERE user=\"whu\";");
+        query("CREATEMAP WITH user AS user, travel AS travel ,startX AS startX, startY AS startY FROM  allAPP WHERE user=\"whu\";");
 
 
         System.out.println("预置命令插入成功");
@@ -194,27 +198,27 @@ public class TransAction {
                 case parse.OPT_CREATE_ORIGINCLASS:
                     log.WriteLog(s);
                     CreateOriginClass(aa);
-                  //  new AlertDialog.Builder(context).setTitle("提示").setMessage("创建成功").setPositiveButton("确定", null).show();
+                    //  new AlertDialog.Builder(context).setTitle("提示").setMessage("创建成功").setPositiveButton("确定", null).show();
                     break;
                 case parse.OPT_CREATE_SELECTDEPUTY:
                     log.WriteLog(s);
                     CreateSelectDeputy(aa);
-                   // new AlertDialog.Builder(context).setTitle("提示").setMessage("创建成功").setPositiveButton("确定", null).show();
+                    // new AlertDialog.Builder(context).setTitle("提示").setMessage("创建成功").setPositiveButton("确定", null).show();
                     break;
                 case parse.OPT_DROP:
                     log.WriteLog(s);
                     Drop(aa);
-                  //  new AlertDialog.Builder(context).setTitle("提示").setMessage("删除成功").setPositiveButton("确定", null).show();
+                    //  new AlertDialog.Builder(context).setTitle("提示").setMessage("删除成功").setPositiveButton("确定", null).show();
                     break;
                 case parse.OPT_INSERT:
                     log.WriteLog(s);
                     Insert(aa);
-                  //  new AlertDialog.Builder(context).setTitle("提示").setMessage("插入成功").setPositiveButton("确定", null).show();
+                    //  new AlertDialog.Builder(context).setTitle("提示").setMessage("插入成功").setPositiveButton("确定", null).show();
                     break;
                 case parse.OPT_DELETE:
                     log.WriteLog(s);
                     Delete(aa);
-                  //  new AlertDialog.Builder(context).setTitle("提示").setMessage("删除成功").setPositiveButton("确定", null).show();
+                    //  new AlertDialog.Builder(context).setTitle("提示").setMessage("删除成功").setPositiveButton("确定", null).show();
                     break;
                 case parse.OPT_SELECT_DERECTSELECT:
                     DirectSelect(aa);
@@ -225,7 +229,7 @@ public class TransAction {
                 case parse.OPT_CREATE_UPDATE:
                     log.WriteLog(s);
                     Update(aa);
-                   // new AlertDialog.Builder(context).setTitle("提示").setMessage("更新成功").setPositiveButton("确定", null).show();
+                    // new AlertDialog.Builder(context).setTitle("提示").setMessage("更新成功").setPositiveButton("确定", null).show();
                     break;
                 case parse.OPT_CREATE_UNIONDEPUTYCLASS:
                     log.WriteLog(s);
@@ -233,6 +237,11 @@ public class TransAction {
                     CreateUnionDeputyClass(aa);
 
                     //new AlertDialog.Builder(context).setTitle("提示").setMessage("union代理类创建成功").setPositiveButton("确定", null).show();
+                    break;
+                case parse.OPT_CREATE_MAP:
+                    log.WriteLog(s);
+                    TravelActivity.data= CreateMap(aa);
+                    // new AlertDialog.Builder(context).setTitle("提示").setMessage("更新成功").setPositiveButton("确定", null).show();
                     break;
                 default:
                     break;
@@ -246,6 +255,81 @@ public class TransAction {
         Toast.makeText(context.getApplicationContext(), "命令执行成功",Toast.LENGTH_SHORT).show();
         return s;
 
+    }
+
+    private String[][] CreateMap(String[] p) {
+        avgCal avgcal = new avgCal();
+        TupleList tpl = new TupleList();
+        int attrnumber = Integer.parseInt(p[1]);
+        String[] attrname = new String[attrnumber];
+        int[] attrid = new int[attrnumber];
+        String[] attrtype = new String[attrnumber];
+        String classname = p[2 + 4 * attrnumber];
+        int classid = 0;
+        for (int i = 0; i < attrnumber; i++) {
+            for (ClassTableItem item : classt.classTable) {
+                if (item.classname.equals(classname) && item.attrname.equals(p[2 + 4 * i])) {
+                    classid = item.classid;
+                    attrid[i] = item.attrid;
+                    attrtype[i] = item.attrtype;
+                    attrname[i] = p[5 + 4 * i];
+                    //重命名
+
+                    break;
+                }
+            }
+        }
+
+
+        int sattrid = 0;
+        String sattrtype = null;
+        for (ClassTableItem item : classt.classTable) {
+//            System.out.println("----"+item.classid);
+//            System.out.println("---"+classid);
+//            System.out.println("------"+item.attrname);
+//            System.out.println("-----"+p[3 + 4 * attrnumber]);
+            if (item.classid == classid && item.attrname.equals(p[3 + 4 * attrnumber])) {
+//                System.out.println("---------++++"+item.classid);
+//                System.out.println("---------++++"+classid);
+//                System.out.println("---------++++"+item.attrname);
+//                System.out.println("---------++++"+p[3 + 4 * attrnumber]);
+
+                sattrid = item.attrid;
+                sattrtype = item.attrtype;
+                break;
+            }
+        }
+
+
+
+        for (ObjectTableItem item : topt.objectTable) {
+            if (item.classid == classid) {
+                Tuple tuple = GetTuple(item.blockid, item.offset);
+                avgcal.append(Arrays.toString(tuple.tuple));
+                if (Condition(sattrtype, tuple, sattrid, p[4 * attrnumber + 5])) {
+                    //Switch
+
+                    for (int j = 0; j < attrnumber; j++) {
+                        if (Integer.parseInt(p[3 + 4 * j]) == 1) {
+                            int value = Integer.parseInt(p[4 + 4 * j]);
+                            int orivalue = Integer.parseInt((String) tuple.tuple[attrid[j]]);
+                            Object ob = value + orivalue;
+                            tuple.tuple[attrid[j]] = ob;
+
+                        }
+
+                    }
+
+
+                    tpl.addTuple(tuple);
+                }
+            }
+        }
+        for (int i = 0; i < attrnumber; i++) {
+            attrid[i] = i;
+        }
+
+        return avgcal.Calculate();
     }
 
 
@@ -1244,4 +1328,3 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
         PrintTab(topt, switchingT, deputyt, biPointerT, classt);
     }
 }
-

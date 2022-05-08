@@ -104,6 +104,9 @@ SELECT name AS testCompany1,  age AS testCompany1 FROM company1 WHERE age=20;
 SELECT nameNew1 AS testCompany3,  ageNew1 AS testCompany3 FROM company3 WHERE ageNew1=20;
 SELECT nameNew2 AS testCompany4,  ageNew2 AS testCompany4 FROM company4 WHERE ageNew2=20;
 
+
+CREATEMAP WITH user AS user, travel AS travel ,startX AS startX, startY AS startY FROM  allAPP WHERE user="whu";
+
 /*
 //TODO 2-1更新迁移 插入源类存在问题
 测试结果:  插入源类

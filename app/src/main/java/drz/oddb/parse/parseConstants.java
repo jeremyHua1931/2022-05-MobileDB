@@ -64,6 +64,10 @@ public interface parseConstants {
   int UPDATE = 30;
   /** RegularExpression Id. */
   int SET = 31;
+  /** RegularExpression Id. */
+  int CREATEMAP = 32;
+  /** RegularExpression Id. */
+  int WITH = 33;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -102,6 +106,8 @@ public interface parseConstants {
     "\"+\"",
     "\"UPDATE\"",
     "\"SET\"",
+    "\"CREATEMAP\"",
+    "\"WITH\"",
   };
 
 }

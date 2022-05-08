@@ -19,6 +19,7 @@ public static final int OPT_SELECT_DERECTSELECT   = 6;
 public static final int OPT_SELECT_INDERECTSELECT = 7;
 public static final int OPT_CREATE_UPDATE         = 8;
 public static final int OPT_CREATE_UNIONDEPUTYCLASS        = 9;
+public static final int OPT_CREATE_MAP        = 10;
 
 	static Queue<String > st= new LinkedList<String>(); ;
   public static void main(String args[]) throws ParseException {
@@ -71,6 +72,8 @@ TOKEN:
 |<PLUS:"+">
 |<UPDATE:"UPDATE">
 |<SET:"SET">
+|<CREATEMAP:"CREATEMAP">
+|<WITH:"WITH">
 }
 
 
@@ -161,7 +164,6 @@ String create() :
            create_s +=",";
            return create_s;
          }
-
 }
 String drop() :
 {
@@ -255,6 +257,18 @@ String select() :
       }
       return select_s;
     }
+   |(<CREATEMAP> <WITH> count = directselect() <SEMICOLON>)
+        {
+    	  select_s = OPT_CREATE_MAP+",";
+          select_s += count;
+          while(!st.isEmpty())
+          {
+            select_s +=",";
+            select_s += st.poll();
+
+          }
+          return select_s;
+        }
 
 }
 

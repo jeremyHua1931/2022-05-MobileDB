@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     TransAction trans = new TransAction(this);
     Intent music = null;
 
+
+
     public int startPreset=0;
 
 
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(startPreset==0){
                     //此处选择预置命令 company和travel
-                    trans.presetCommand();
+                    trans.presetCommand2();
                     startPreset=startPreset+1;
                 }
             }
