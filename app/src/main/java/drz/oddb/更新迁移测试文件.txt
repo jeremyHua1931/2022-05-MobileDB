@@ -1,0 +1,234 @@
+
+//下列5条sql语句预置插入
+CREATE CLASS company1 (name char,age int, salary int);
+CREATE CLASS company2 (name char,age int, salary int);
+INSERT INTO company1 VALUES ("aa",20,1000);
+INSERT INTO company2 VALUES ("bb",20,1000);
+INSERT INTO company1 VALUES ("cc",20,1000);
+
+
+//新建代理类
+
+
+CREATE UNIONDEPUTYCLASS company3
+AS
+(
+SELECT name AS nameNew1,  age AS ageNew1 FROM  company1 WHERE age=20
+UNION
+SELECT name AS nameNew1,  age AS ageNew2 FROM  company2 WHERE age=20
+);
+
+
+SELECT nameNew1 AS testCompany3,  ageNew1 AS testCompany3 FROM company3 WHERE ageNew1=20;
+/*
+测试结果:(ok)
+testCompany3 testCompany3
+
+//来自company1
+aa            20
+cc            20
+//来自company2
+bb            20
+*/
+
+CREATE UNIONDEPUTYCLASS company4
+AS
+(
+SELECT nameNew1 AS nameNew2,  ageNew1 AS ageNew2 FROM  company3 WHERE age=20
+UNION
+SELECT nameNew1 AS nameNew2,  ageNew1 AS ageNew2 FROM  company3 WHERE age=20
+);
+
+SELECT nameNew2 AS testCompany4,  ageNew2 AS testCompany4 FROM company4 WHERE ageNew2=20;
+
+/*
+测试结果:(ok)
+testCompany4 testCompany4
+//来自代理类company3(代理company1和company2)
+aa            20
+cc            20
+bb            20
+//来自代理类company3(代理company1和company2)
+aa            20
+cc            20
+bb            20
+*/
+
+
+
+//更新迁移测试
+//测试用例
+
+company1
+company2  ==>company3
+
+
+company3
+company3 ==>company4
+
+
+//1-测试 删除类
+
+//(1)删除源类
+DROP CLASS company1;
+
+/*
+测试结果: 所有关于company1的代理类全部被删除, 包括二级代理类(只能一级代理类有关)也会被删除
+*/
+
+//(2)删除一级代理类
+
+DROP CLASS company3;
+/*
+测试结果: 所有关于company3的代理类全部被删除, company3的源类不会被删除
+*/
+
+//(3)删除二级代理类
+
+DROP CLASS company4;
+
+/*
+测试结果:所有关于company3的代理类全部被删除, company4的源类不会被删除
+*/
+
+
+===========>测试分析: 删除类会向下迭代删除,后续代理类只要有一个属性与被删除的类有关,即被删除
+
+
+//2-测试 插入语句
+
+//(1)插入语句源类
+INSERT INTO company1 VALUES ("gg",20,3000);
+
+SELECT name AS testCompany1,  age AS testCompany1 FROM company1 WHERE age=20;
+SELECT nameNew1 AS testCompany3,  ageNew1 AS testCompany3 FROM company3 WHERE ageNew1=20;
+SELECT nameNew2 AS testCompany4,  ageNew2 AS testCompany4 FROM company4 WHERE ageNew2=20;
+
+/*
+//TODO 2-1更新迁移 插入源类存在问题
+测试结果:  插入源类
+          (a)没有二级代理时, 更新一级代理
+          (b)有二级代理时,直接崩溃
+*/
+
+//(2)插入语句一级代理类
+INSERT INTO company3 VALUES ("gg",20);
+
+SELECT name AS testCompany1,  age AS testCompany1 FROM company1 WHERE age=20;
+SELECT nameNew1 AS testCompany3,  ageNew1 AS testCompany3 FROM company3 WHERE ageNew1=20;
+SELECT nameNew2 AS testCompany4,  ageNew2 AS testCompany4 FROM company4 WHERE ageNew2=20;
+/*
+//TODO 2-2更新迁移 插入一级代理类存在问题
+测试结果: 插入源类
+        (a)没有二级代理时, 只更新一级代理类,不更新源类
+        (b)有二级代理时, 奔溃
+*/
+
+//(3)插入语句二级代理类
+
+INSERT INTO company4 VALUES ("gg",20,3000);
+
+SELECT name AS testCompany1,  age AS testCompany1 FROM company1 WHERE age=20;
+SELECT nameNew1 AS testCompany3,  ageNew1 AS testCompany3 FROM company3 WHERE ageNew1=20;
+SELECT nameNew2 AS testCompany4,  ageNew2 AS testCompany4 FROM company4 WHERE ageNew2=20;
+/*
+测试结果: 只会二级代理类,不会向上更新源类和一级代理类
+*/
+
+===========>测试分析: 不存在二级代理时, 能够实现向下更新, 不能实现向上更新
+                     存在二级代理时, 更新源类或者一级代理类直接奔溃, 更新二级代理时只更新二级代理
+
+//3-测试 删除语句
+
+//(1)删除语句源类
+
+DELETE FROM company1 WHERE name="aa";
+SELECT name AS testCompany1,  age AS testCompany1 FROM company1 WHERE age=20;
+SELECT name AS testCompany1,  age AS testCompany1 FROM company2 WHERE age=20;
+SELECT nameNew1 AS testCompany3,  ageNew1 AS testCompany3 FROM company3 WHERE ageNew1=20;
+SELECT nameNew2 AS testCompany4,  ageNew2 AS testCompany4 FROM company4 WHERE ageNew2=20;
+
+/*
+测试结果: 所有均更新
+*/
+//(2)删除语句一级代理类
+
+DELETE FROM company3 WHERE name="aa";
+SELECT name AS testCompany1,  age AS testCompany1 FROM company1 WHERE age=20;
+SELECT nameNew1 AS testCompany3,  ageNew1 AS testCompany3 FROM company3 WHERE ageNew1=20;
+SELECT nameNew2 AS testCompany4,  ageNew2 AS testCompany4 FROM company4 WHERE ageNew2=20;
+
+//TODO 3-1 删除一级代理类表项没有任何变化
+/*
+测试结果:没有任何反应,
+*/
+
+//(3)删除语句二级代理类
+DELETE FROM company4 WHERE name="aa";
+SELECT name AS testCompany1,  age AS testCompany1 FROM company1 WHERE age=20;
+SELECT nameNew1 AS testCompany3,  ageNew1 AS testCompany3 FROM company3 WHERE ageNew1=20;
+SELECT nameNew2 AS testCompany4,  ageNew2 AS testCompany4 FROM company4 WHERE ageNew2=20;
+//TODO 3-2 删除二级代理类表项没有任何变化
+/*
+测试结果:没有任何反应
+*/
+
+//4-测试 更新语句
+
+//(1)更新语句源类
+
+UPDATE company1 SET age=100 WHERE name="aa";
+
+SELECT name AS testCompany1,  age AS testCompany1 FROM company1 WHERE age=20;
+SELECT name AS testCompany1,  age AS testCompany1 FROM company2 WHERE age=20;
+SELECT nameNew1 AS testCompany3,  ageNew1 AS testCompany3 FROM company3 WHERE ageNew1=20;
+SELECT nameNew2 AS testCompany4,  ageNew2 AS testCompany4 FROM company4 WHERE ageNew2=20;
+
+//TODO 4-1 更新源类属性值
+/*
+测试结果: 更新直接删除了源类需要更新的项, 并未更新;
+          一级代理需要跟新的项直接被删除,并未更新
+          二级代理没有任何变化
+*/
+
+//(2)更新语句一级代理类
+UPDATE company3 SET age=100 WHERE name="aa";
+
+SELECT name AS testCompany1,  age AS testCompany1 FROM company1 WHERE age=20;
+SELECT name AS testCompany1,  age AS testCompany1 FROM company2 WHERE age=20;
+SELECT nameNew1 AS testCompany3,  ageNew1 AS testCompany3 FROM company3 WHERE ageNew1=20;
+SELECT nameNew2 AS testCompany4,  ageNew2 AS testCompany4 FROM company4 WHERE ageNew2=20;
+//TODO 4-2 更新一级代理属性值
+/*测试结果:无论二级代理是否存在,均崩溃
+*/
+
+//(3)更新语句二级代理类
+UPDATE company4 SET age=100 WHERE name="aa";
+
+SELECT name AS testCompany1,  age AS testCompany1 FROM company1 WHERE age=20;
+SELECT name AS testCompany1,  age AS testCompany1 FROM company2 WHERE age=20;
+SELECT nameNew1 AS testCompany3,  ageNew1 AS testCompany3 FROM company3 WHERE ageNew1=20;
+SELECT nameNew2 AS testCompany4,  ageNew2 AS testCompany4 FROM company4 WHERE ageNew2=20;
+//TODO 4-3 更新二级代理源类属性值
+/*
+测试结果: 奔溃
+*/
+
+
+测试总结:
+
+update操作应该具有较大问题, 可能就是task2任务
+
+对于update操作  建议是先执行drop然后执行insert, 也就是说需要修复drop和insert操作
+
+
+
+
+
+
+
+
+
+
+
+

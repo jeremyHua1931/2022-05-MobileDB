@@ -106,31 +106,43 @@ public class TransAction {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(s.getBytes());
         parse p = new parse(byteArrayInputStream);
         try {
-            String[] aa = p.Run();
+
 
             //预置插入
 
-
-            System.out.println("打印");
-            System.out.println(Arrays.toString(aa));
-
-            if (classt.startTmp == 1000) {
+            if (classt.startTmp == 0) {
                 classt.startTmp++;
                 System.out.println("第一次执行时,预置插入下列命令");
-                System.out.println("CREATE CLASS company (name char,age int, salary int);\n" +
-                        "INSERT INTO company VALUES (\"aa\",20,1000);");
+                System.out.println("//下列5条sql语句预置插入\n" +
+                        "CREATE CLASS company1 (name char,age int, salary int);\n" +
+                        "CREATE CLASS company2 (name char,age int, salary int);\n" +
+                        "INSERT INTO company1 VALUES (\"aa\",20,1000);\n" +
+                        "INSERT INTO company2 VALUES (\"bb\",20,1000);\n" +
+                        "INSERT INTO company1 VALUES (\"cc\",20,1000);");
 
                 String[] company1CreateTmp = new String[]{"1", "3", "company1", "name", "char", "age", "int", "salary", "int"};
                 String[] company2CreateTmp = new String[]{"1", "3", "company2", "name", "char", "age", "int", "salary", "int"};
                 String[] company1InsertTmp = new String[]{"4", "3", "company1", "aa", "20", "1000"};
                 String[] company2InsertTmp = new String[]{"4", "3", "company2", "bb", "20", "1000"};
+                String[] company3InsertTmp = new String[]{"4", "3", "company1", "cc", "20", "1000"};
+
+                String[] company3Union = new String[]{"9", "2", "2", "company3", "name", "0", "0", "nameNew1", "age", "0", "0", "ageNew1", "company1", "age", "=", "20", "name", "0", "0", "nameNew1", "age", "0", "0", "ageNew2", "company2", "age", "=", "20"};
+                String[] company4Union = new String[]{"9", "2", "2", "company4", "nameNew1", "0", "0", "nameNew2", "ageNew1", "0", "0", "ageNew2", "company3", "age", "=", "20", "nameNew1", "0", "0", "nameNew2", "ageNew1", "0", "0", "ageNew2", "company3", "age", "=", "20"};
 
                 CreateOriginClass(company1CreateTmp);
                 CreateOriginClass(company2CreateTmp);
                 Insert(company1InsertTmp);
+                Insert(company3InsertTmp);
                 Insert(company2InsertTmp);
+                CreateUnionDeputyClass(company3Union);
+                CreateUnionDeputyClass(company4Union);
+
+                System.out.println("预置命令插入成功");
             }
 
+            String[] aa = p.Run();
+            System.out.println("打印");
+            System.out.println(Arrays.toString(aa));
 
             switch (Integer.parseInt(aa[0])) {
                 case parse.OPT_CREATE_ORIGINCLASS:
@@ -167,13 +179,15 @@ public class TransAction {
                 case parse.OPT_CREATE_UPDATE:
                     log.WriteLog(s);
                     Update(aa);
+
                     new AlertDialog.Builder(context).setTitle("提示").setMessage("更新成功").setPositiveButton("确定", null).show();
+                    break;
                 case parse.OPT_CREATE_UNIONDEPUTYCLASS:
                     log.WriteLog(s);
                     System.out.println("进入创建union代理类");
                     CreateUnionDeputyClass(aa);
                     new AlertDialog.Builder(context).setTitle("提示").setMessage("union代理类创建成功").setPositiveButton("确定", null).show();
-
+                    break;
                 default:
                     break;
 
@@ -303,14 +317,12 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
         int[] bedeputyid = new int[Integer.parseInt(selectCount)]; //被代理的类的id
 
 
-
         int[] bedeputyattrid = new int[Integer.parseInt(attrCount)];
 
         System.out.println("由于所有新属性名在所有的select中保持一致,选择第一个select语句, 即: ");
         System.out.println(Arrays.toString(selectALL[0]));
 
         String beDeputyName = selectALL[0][OneSelect - 2];
-
 
 
         for (int i = 0; i < Integer.parseInt(attrCount); i++) {
@@ -335,21 +347,20 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
             }
         }
 
-        for(int i=0;i<Integer.parseInt(selectCount);i++)
-        {
-            System.out.println("被代理类的名字是" + selectALL[i][OneSelect - 2]);
+        for (int i = 0; i < Integer.parseInt(selectCount); i++) {
+//            System.out.println("被代理类的名字是" + selectALL[i][OneSelect - 2]);
             for (ClassTableItem item : classt.classTable) {
                 if (item.classname.equals(selectALL[i][OneSelect - 2])) {
                     bedeputyid[i] = item.classid;
-                    System.out.println("此时为  "+item.classid);
+                    System.out.println("此时为  " + item.classid);
                     break;
                 }
             }
         }
 
 
-        System.out.println("============================="+Arrays.toString(bedeputyattrid));
-        System.out.println("============================="+Arrays.toString(bedeputyid));
+//        System.out.println("============================="+Arrays.toString(bedeputyattrid));
+//        System.out.println("============================="+Arrays.toString(bedeputyid));
 
 
         //2-修改deputyTable
@@ -391,17 +402,17 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
         List<ObjectTableItem> obj = new ArrayList<>();
 
         for (int i = 0; i < Integer.parseInt(selectCount); i++) {
-            System.out.println("开始选择第 "+(i+1)+" 个类");
+//            System.out.println("开始选择第 "+(i+1)+" 个类");
 
             for (ObjectTableItem item2 : topt.objectTable) {
-                System.out.println("第 "+(i+1)+" 次遍历object表");
-                System.out.println("classid= " +item2.classid);
-                System.out.println("第一个被代理类id是 "+ bedeputyid[i]);
+//                System.out.println("第 "+(i+1)+" 次遍历object表");
+//                System.out.println("classid= " +item2.classid);
+//                System.out.println("第一个被代理类id是 "+ bedeputyid[i]);
 
                 if (item2.classid == bedeputyid[i]) {
                     Tuple tuple = GetTuple(item2.blockid, item2.offset);
 
-                    System.out.println("取出的元组是"+Arrays.toString(tuple.tuple));
+                    System.out.println("取出的元组是" + Arrays.toString(tuple.tuple));
                     if (Condition(contype[i], tuple, conid[i], condition[i][2])) {
 
                         Tuple ituple = new Tuple();
@@ -416,10 +427,10 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
                                 ituple.tuple[o] = ob;
                             }
 
-                            System.out.println("++++++++++++++++++++++++-------------"+bedeputyattrid[o]);
+//                            System.out.println("++++++++++++++++++++++++-------------"+bedeputyattrid[o]);
 
                             if (Integer.parseInt(selectALL[i][3 + 4 * o]) == 0) {
-                                System.out.println("+++++++++++++++++" + tuple.tuple[bedeputyattrid[o]]);
+//                                System.out.println("+++++++++++++++++" + tuple.tuple[bedeputyattrid[o]]);
                                 ituple.tuple[o] = tuple.tuple[bedeputyattrid[o]];
                             }
                         }
