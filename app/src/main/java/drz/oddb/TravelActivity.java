@@ -42,7 +42,8 @@ public class TravelActivity extends AppCompatActivity {
                     System.out.println(Arrays.deepToString(data[i]));
                 }
 
-                //TODO: 此处进行地图展示动作
+                //TODO: 此处进行地图展示动作 data[][]为轨迹数据值,需要提前执行
+                // CREATEMAP WITH user AS user, travel AS travel ,startX AS startX, startY AS startY FROM  allAPP WHERE user="whu";
             }
         });
 
