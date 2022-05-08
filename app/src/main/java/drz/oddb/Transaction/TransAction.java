@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -101,44 +102,89 @@ public class TransAction {
         return true;
     }
 
+    public void  presetCommand(){
+
+            System.out.println("第一次执行时,预置插入下列命令");
+            clearALL();
+            query("CREATE CLASS company1 (name char,age int, salary int);");
+            query("CREATE CLASS company2 (name char,age int, salary int);");
+            query("INSERT INTO company1 VALUES (\"aa\",20,1000);");
+            query("INSERT INTO company1 VALUES (\"cc\",20,1000);");
+            query("INSERT INTO company2 VALUES (\"bb\",20,1000);");
+            query("CREATE UNIONDEPUTYCLASS company3\n" +
+                    "AS\n" +
+                    "(\n" +
+                    "SELECT name AS nameNew1,  age AS ageNew1 FROM  company1 WHERE age=20\n" +
+                    "UNION\n" +
+                    "SELECT name AS nameNew1,  age AS ageNew2 FROM  company2 WHERE age=20\n" +
+                    ");");
+//            query("CREATE UNIONDEPUTYCLASS company4\n" +
+//                    "AS\n" +
+//                    "(\n" +
+//                    "SELECT nameNew1 AS nameNew2,  ageNew1 AS ageNew2 FROM  company3 WHERE age=20\n" +
+//                    "UNION\n" +
+//                    "SELECT nameNew1 AS nameNew2,  ageNew1 AS ageNew2 FROM  company3 WHERE age=20\n" +
+//                    ");");
+
+
+            System.out.println("预置命令插入成功");
+            Toast.makeText(context.getApplicationContext(), "预置命令执行成功",Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void  presetCommand2(){
+
+        System.out.println("第一次执行时,预置插入轨迹命令");
+        clearALL();
+        //轨迹预置命令
+        query("CREATE CLASS baidu    (user char, travel char,startX int, startY int, endX int , endY int);");
+        query("CREATE CLASS didi     (user char, travel char,startX int, startY int, endX int , endY int);");
+        query("CREATE CLASS nike     (user char, travel char,startX int, startY int, endX int , endY int);");
+        query("CREATE CLASS addi     (user char, travel char,startX int, startY int, endX int , endY int);");
+
+        query("INSERT INTO baidu VALUES (\"whu\",\"1\",23,34,25,56);");
+        query("INSERT INTO didi VALUES  (\"whu\",\"2\",100,101,103,156);");
+        query("INSERT INTO nike VALUES  (\"whu\",\"3\",200,201,203,256);");
+        query("INSERT INTO addi VALUES  (\"whu\",\"4\",300,301,303,356);");
+
+        query("CREATE UNIONDEPUTYCLASS allAPP\n" +
+                "AS\n" +
+                "(\n" +
+                "SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  baidu WHERE user=\"whu\"\n" +
+                "UNION\n" +
+                "SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  didi WHERE user=\"whu\"\n" +
+                "UNION\n" +
+                "SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  nike WHERE user=\"whu\"\n" +
+                "UNION\n" +
+                "SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  addi WHERE user=\"whu\"\n" +
+                ");");
+        query("SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  allAPP WHERE user=\"whu\";");
+
+
+        System.out.println("预置命令插入成功");
+        Toast.makeText(context.getApplicationContext(), "预置命令执行成功",Toast.LENGTH_SHORT).show();
+
+    }
+
+    public  void clearALL(){
+        classt.clear();
+        topt.clear();
+        deputyt.clear();
+        biPointerT.clear();
+        switchingT.clear();
+    }
+
+
     public String query(String s) {
 
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(s.getBytes());
         parse p = new parse(byteArrayInputStream);
-        try {
 
+        try {
 
             //预置插入
 
-            if (classt.startTmp == 0) {
-                classt.startTmp++;
-                System.out.println("第一次执行时,预置插入下列命令");
-                System.out.println("//下列5条sql语句预置插入\n" +
-                        "CREATE CLASS company1 (name char,age int, salary int);\n" +
-                        "CREATE CLASS company2 (name char,age int, salary int);\n" +
-                        "INSERT INTO company1 VALUES (\"aa\",20,1000);\n" +
-                        "INSERT INTO company2 VALUES (\"bb\",20,1000);\n" +
-                        "INSERT INTO company1 VALUES (\"cc\",20,1000);");
 
-                String[] company1CreateTmp = new String[]{"1", "3", "company1", "name", "char", "age", "int", "salary", "int"};
-                String[] company2CreateTmp = new String[]{"1", "3", "company2", "name", "char", "age", "int", "salary", "int"};
-                String[] company1InsertTmp = new String[]{"4", "3", "company1", "aa", "20", "1000"};
-                String[] company2InsertTmp = new String[]{"4", "3", "company2", "bb", "20", "1000"};
-                String[] company3InsertTmp = new String[]{"4", "3", "company1", "cc", "20", "1000"};
-
-                String[] company3Union = new String[]{"9", "2", "2", "company3", "name", "0", "0", "nameNew1", "age", "0", "0", "ageNew1", "company1", "age", "=", "20", "name", "0", "0", "nameNew1", "age", "0", "0", "ageNew2", "company2", "age", "=", "20"};
-                String[] company4Union = new String[]{"9", "2", "2", "company4", "nameNew1", "0", "0", "nameNew2", "ageNew1", "0", "0", "ageNew2", "company3", "age", "=", "20", "nameNew1", "0", "0", "nameNew2", "ageNew1", "0", "0", "ageNew2", "company3", "age", "=", "20"};
-
-                CreateOriginClass(company1CreateTmp);
-                CreateOriginClass(company2CreateTmp);
-                Insert(company1InsertTmp);
-                Insert(company3InsertTmp);
-                Insert(company2InsertTmp);
-                CreateUnionDeputyClass(company3Union);
-                CreateUnionDeputyClass(company4Union);
-
-                System.out.println("预置命令插入成功");
-            }
 
             String[] aa = p.Run();
             System.out.println("打印");
@@ -148,27 +194,27 @@ public class TransAction {
                 case parse.OPT_CREATE_ORIGINCLASS:
                     log.WriteLog(s);
                     CreateOriginClass(aa);
-                    new AlertDialog.Builder(context).setTitle("提示").setMessage("创建成功").setPositiveButton("确定", null).show();
+                  //  new AlertDialog.Builder(context).setTitle("提示").setMessage("创建成功").setPositiveButton("确定", null).show();
                     break;
                 case parse.OPT_CREATE_SELECTDEPUTY:
                     log.WriteLog(s);
                     CreateSelectDeputy(aa);
-                    new AlertDialog.Builder(context).setTitle("提示").setMessage("创建成功").setPositiveButton("确定", null).show();
+                   // new AlertDialog.Builder(context).setTitle("提示").setMessage("创建成功").setPositiveButton("确定", null).show();
                     break;
                 case parse.OPT_DROP:
                     log.WriteLog(s);
                     Drop(aa);
-                    new AlertDialog.Builder(context).setTitle("提示").setMessage("删除成功").setPositiveButton("确定", null).show();
+                  //  new AlertDialog.Builder(context).setTitle("提示").setMessage("删除成功").setPositiveButton("确定", null).show();
                     break;
                 case parse.OPT_INSERT:
                     log.WriteLog(s);
                     Insert(aa);
-                    new AlertDialog.Builder(context).setTitle("提示").setMessage("插入成功").setPositiveButton("确定", null).show();
+                  //  new AlertDialog.Builder(context).setTitle("提示").setMessage("插入成功").setPositiveButton("确定", null).show();
                     break;
                 case parse.OPT_DELETE:
                     log.WriteLog(s);
                     Delete(aa);
-                    new AlertDialog.Builder(context).setTitle("提示").setMessage("删除成功").setPositiveButton("确定", null).show();
+                  //  new AlertDialog.Builder(context).setTitle("提示").setMessage("删除成功").setPositiveButton("确定", null).show();
                     break;
                 case parse.OPT_SELECT_DERECTSELECT:
                     DirectSelect(aa);
@@ -179,14 +225,14 @@ public class TransAction {
                 case parse.OPT_CREATE_UPDATE:
                     log.WriteLog(s);
                     Update(aa);
-
-                    new AlertDialog.Builder(context).setTitle("提示").setMessage("更新成功").setPositiveButton("确定", null).show();
+                   // new AlertDialog.Builder(context).setTitle("提示").setMessage("更新成功").setPositiveButton("确定", null).show();
                     break;
                 case parse.OPT_CREATE_UNIONDEPUTYCLASS:
                     log.WriteLog(s);
                     System.out.println("进入创建union代理类");
                     CreateUnionDeputyClass(aa);
-                    new AlertDialog.Builder(context).setTitle("提示").setMessage("union代理类创建成功").setPositiveButton("确定", null).show();
+
+                    //new AlertDialog.Builder(context).setTitle("提示").setMessage("union代理类创建成功").setPositiveButton("确定", null).show();
                     break;
                 default:
                     break;
@@ -197,6 +243,7 @@ public class TransAction {
             e.printStackTrace();
         }
 
+        Toast.makeText(context.getApplicationContext(), "命令执行成功",Toast.LENGTH_SHORT).show();
         return s;
 
     }

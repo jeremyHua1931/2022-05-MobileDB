@@ -52,10 +52,10 @@ INSERT INTO didi VALUES  ("whu","2",100,101,103,156);
 INSERT INTO nike VALUES  ("whu","3",200,201,203,256);
 INSERT INTO addi VALUES  ("whu","4",300,301,303,356);
 
-CREATE UNIONDEPUTYCLASS allAPP2
+CREATE UNIONDEPUTYCLASS allAPP
 AS
 (
-SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  allAPP WHERE user="whu"
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  baidu WHERE user="whu"
 UNION
 SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  didi WHERE user="whu"
 UNION
@@ -64,7 +64,14 @@ UNION
 SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  addi WHERE user="whu"
 );
 
-SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  allAPP2 WHERE user="whu";
+SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  allAPP WHERE user="whu";
+
+
+
+
+
+
+
 
 
 UPDATE  SET salary=8000 WHERE name="gg";

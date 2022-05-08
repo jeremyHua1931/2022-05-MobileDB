@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.Serializable;
 
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     TransAction trans = new TransAction(this);
     Intent music = null;
 
+    public int startPreset=0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,27 @@ public class MainActivity extends AppCompatActivity {
 
         //播放BGM
         startService(music);
+        if(startPreset==0){
+            trans.clearALL();
+        }
+
+
+        Button presetCommandButton=findViewById(R.id.presetCommandButton);
+
+
+
+
+        presetCommandButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(startPreset==0){
+                    //此处选择预置命令 company和travel
+                    trans.presetCommand();
+                    startPreset=startPreset+1;
+                }
+            }
+        });
+
 
         //查询按钮
         Button button = findViewById(R.id.button);
@@ -52,7 +76,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //onStop();
                 //trans.Test();
-               trans.query(editText.getText().toString());
+                String INPUT=editText.getText().toString();
+                editText.setText("");
+               trans.query(INPUT);
+
             }
         });
 
@@ -61,8 +88,9 @@ public class MainActivity extends AppCompatActivity {
         exit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showexitdialog(v);
-                stopService(music);
+//                showexitdialog(v);
+//                stopService(music);
+               trans.clearALL();
             }
         });
 

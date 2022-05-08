@@ -6,4 +6,8 @@ import java.util.List;
 
 public class BiPointerTable implements Serializable {
     public List<BiPointerTableItem> biPointerTable=new ArrayList<>();
+
+    public void clear(){
+        biPointerTable.clear();
+    }
 }
