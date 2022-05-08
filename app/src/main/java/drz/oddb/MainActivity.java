@@ -28,13 +28,11 @@ import drz.oddb.Transaction.TransAction;
 public class MainActivity extends AppCompatActivity {
 
     //查询输入框
-
     private EditText editText;
 
     private TextView text_view;
     TransAction trans = new TransAction(this);
     Intent music = null;
-
 
 
     @Override

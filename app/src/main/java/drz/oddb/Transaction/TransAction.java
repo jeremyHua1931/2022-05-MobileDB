@@ -413,6 +413,7 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
                     Tuple tuple = GetTuple(item2.blockid, item2.offset);
 
                     System.out.println("取出的元组是" + Arrays.toString(tuple.tuple));
+
                     if (Condition(contype[i], tuple, conid[i], condition[i][2])) {
 
                         Tuple ituple = new Tuple();
