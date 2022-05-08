@@ -7,5 +7,5 @@ public class LogTableItem {
         this.str=s;
         this.length=s.length();
     }
-    public LogTableItem(){};
+    public LogTableItem(){}
 }

@@ -19,7 +19,7 @@ import drz.oddb.Transaction.SystemTable.ObjectTable;
 import drz.oddb.Transaction.SystemTable.SwitchingTable;
 
 public class ShowTable extends AppCompatActivity implements Serializable {
-    private String[] tables = new String[5];
+    private final String[] tables = new String[5];
     Context context;
 
 
@@ -38,7 +38,7 @@ public class ShowTable extends AppCompatActivity implements Serializable {
         final ClassTable classTable = (ClassTable)bundle0.getSerializable("ClassTable");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(ShowTable.this,android.R.layout.simple_list_item_1,tables);
-        ListView tableList = (ListView)findViewById(R.id.tablelist);
+        ListView tableList = findViewById(R.id.tablelist);
         tableList.setAdapter(adapter);
         tableList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
