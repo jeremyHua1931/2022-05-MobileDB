@@ -1,5 +1,6 @@
 package drz.oddb;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import drz.oddb.Memory.*;
 import drz.oddb.Transaction.SystemTable.BiPointerTable;
@@ -35,37 +37,78 @@ public class MainActivity extends AppCompatActivity {
     TransAction trans = new TransAction(this);
     Intent music = null;
 
+    Context context;
 
 
-    public int startPreset=0;
-
+    public int startPreset = 0;
+    public int presetInsert1 = 0;
+    public int presetInsert2 = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        music = new Intent(MainActivity.this,MusicServer.class);
+        music = new Intent(MainActivity.this, MusicServer.class);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         //播放BGM
         startService(music);
-        if(startPreset==0){
+        if (startPreset == 0) {
             trans.clearALL();
         }
 
 
-        Button presetCommandButton=findViewById(R.id.presetCommandButton);
+        Button presetCommandButton = findViewById(R.id.presetCommandButton);
+        final String[] choice = new String[]{"无预置命令", "company预置命令", "AppTravel预置命令", "companySelect", "AppTravelSelect"};
 
-
-
-
+        String presetChoice;
+        int[] c = new int[1];
         presetCommandButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(startPreset==0){
-                    //此处选择预置命令 company和travel
-                    trans.presetCommand2();
-                    startPreset=startPreset+1;
-                }
+
+                //此处选择预置命令 company和travel
+//                    trans.presetCommand2();
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity.this);
+                builder1.setTitle("请选择命令");
+
+                builder1.setNegativeButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (c[0] == 1) {
+
+                                trans.presetCommand1();
+
+
+                                System.out.println("执行命令1");
+
+
+                        } else if (c[0] == 2) {
+
+
+                                trans.presetCommand2();
+
+                                System.out.println("执行命令2");
+
+
+                        } else if (c[0] == 3) {
+                            trans.presetCommand3();
+                        } else if (c[0] == 4) {
+                            trans.presetCommand4();
+                        }
+
+                    }
+                });
+
+                builder1.setSingleChoiceItems(choice, 0, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        c[0] = which;
+                    }
+                });
+                System.out.println();
+                AlertDialog alert = builder1.create();
+                alert.show();
             }
         });
 
@@ -78,9 +121,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //onStop();
                 //trans.Test();
-                String INPUT=editText.getText().toString();
+                String INPUT = editText.getText().toString();
                 editText.setText("");
-               trans.query(INPUT);
+                trans.query(INPUT);
 
             }
         });
@@ -90,9 +133,9 @@ public class MainActivity extends AppCompatActivity {
         exit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                showexitdialog(v);
-//                stopService(music);
-               trans.clearALL();
+                showexitdialog(v);
+                stopService(music);
+//                trans.clearALL();
             }
         });
 
@@ -106,21 +149,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    protected void onStop(){
-        Intent intent = new Intent(MainActivity.this,MusicServer.class);
+
+    protected void onStop() {
+        Intent intent = new Intent(MainActivity.this, MusicServer.class);
         stopService(intent);
         super.onStop();
         Log.e("main", "...onstop");
     }
 
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
         startService(this.music);
-        Log.e("main","...onstart");
+        Log.e("main", "...onstart");
     }
 
     //点击exit_button退出程序
-    public void showexitdialog(View v){
+    public void showexitdialog(View v) {
         //定义一个新对话框对象
         AlertDialog.Builder exit_dialog = new AlertDialog.Builder(this);
         //设置对话框提示内容

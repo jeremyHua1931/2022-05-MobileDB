@@ -107,12 +107,13 @@ public class TransAction {
 
 //        new AlertDialog.Builder(context).setTitle("提示").setMessage("执行预置命令2").setPositiveButton("确定", null).show();
         System.out.println("第一次执行时,预置插入下列命令");
-        clearALL();
+
         query("CREATE CLASS company1 (name char,age int, salary int);");
         query("CREATE CLASS company2 (name char,age int, salary int);");
         query("INSERT INTO company1 VALUES (\"aa\",20,1000);");
         query("INSERT INTO company1 VALUES (\"cc\",20,1000);");
         query("INSERT INTO company2 VALUES (\"bb\",20,1000);");
+
         query("CREATE UNIONDEPUTYCLASS company3\n" +
                 "AS\n" +
                 "(\n" +
@@ -127,19 +128,14 @@ public class TransAction {
 //                    "UNION\n" +
 //                    "SELECT nameNew1 AS nameNew2,  ageNew1 AS ageNew2 FROM  company3 WHERE age=20\n" +
 //                    ");");
-
-        query("SELECT nameNew1 AS testCompany3,  ageNew1 AS testCompany3 FROM company3 WHERE ageNew1=20;");
         System.out.println("预置命令插入成功");
-        Toast.makeText(context.getApplicationContext(), "预置命令执行成功",Toast.LENGTH_SHORT).show();
 
     }
 
     public void  presetCommand2(){
-
-
 //        new AlertDialog.Builder(context).setTitle("提示").setMessage("执行预置命令2").setPositiveButton("确定", null).show();
         System.out.println("第一次执行时,预置插入轨迹命令");
-        clearALL();
+
         //轨迹预置命令
         query("CREATE CLASS baidu    (user char, travel char,startX int, startY int, endX int , endY int);");
         query("CREATE CLASS didi     (user char, travel char,startX int, startY int, endX int , endY int);");
@@ -166,9 +162,15 @@ public class TransAction {
 
 
         System.out.println("预置命令插入成功");
-        Toast.makeText(context.getApplicationContext(), "预置命令执行成功",Toast.LENGTH_SHORT).show();
-
     }
+
+    public void presetCommand3(){
+        query("SELECT nameNew1 AS testCompany3,  ageNew1 AS testCompany3 FROM company3 WHERE ageNew1=20;");
+    }
+    public void presetCommand4(){
+        query("SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY  FROM  allAPP WHERE user=\"whu\";");
+    }
+
 
     public  void clearALL(){
         classt.clear();
@@ -176,6 +178,7 @@ public class TransAction {
         deputyt.clear();
         biPointerT.clear();
         switchingT.clear();
+
     }
 
 
