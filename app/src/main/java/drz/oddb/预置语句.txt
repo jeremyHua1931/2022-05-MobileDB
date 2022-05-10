@@ -66,6 +66,7 @@ DELETE FROM company3 WHERE nameNew1="bb";
 
 DELETE FROM company4 WHERE nameNew2="cc";
 
+
 DROP
 DROP CLASS company1;
 DROP CLASS company3;

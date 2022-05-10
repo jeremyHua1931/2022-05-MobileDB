@@ -108,26 +108,32 @@ public class TransAction {
 //        new AlertDialog.Builder(context).setTitle("提示").setMessage("执行预置命令2").setPositiveButton("确定", null).show();
         System.out.println("第一次执行时,预置插入下列命令");
 
-        query("CREATE CLASS company1 (name char,age int, salary int);");
-        query("CREATE CLASS company2 (name char,age int, salary int);");
-        query("INSERT INTO company1 VALUES (\"aa\",20,1000);");
-        query("INSERT INTO company1 VALUES (\"cc\",20,1000);");
-        query("INSERT INTO company2 VALUES (\"bb\",20,1000);");
-
-        query("CREATE UNIONDEPUTYCLASS company3\n" +
+        String company3Union="CREATE UNIONDEPUTYCLASS company3\n" +
                 "AS\n" +
                 "(\n" +
-                "SELECT name AS nameNew1,  age AS ageNew1 FROM  company1 WHERE age=20\n" +
+                "SELECT name AS nameNew1,  age AS ageNew1, salary AS salaryNew1 FROM  company1 WHERE name=\"bb\"\n" +
                 "UNION\n" +
-                "SELECT name AS nameNew1,  age AS ageNew2 FROM  company2 WHERE age=20\n" +
-                ");");
-//            query("CREATE UNIONDEPUTYCLASS company4\n" +
-//                    "AS\n" +
-//                    "(\n" +
-//                    "SELECT nameNew1 AS nameNew2,  ageNew1 AS ageNew2 FROM  company3 WHERE age=20\n" +
-//                    "UNION\n" +
-//                    "SELECT nameNew1 AS nameNew2,  ageNew1 AS ageNew2 FROM  company3 WHERE age=20\n" +
-//                    ");");
+                "SELECT name AS nameNew1,  age AS ageNew1 , salary AS salaryNew1 FROM  company2 WHERE age=30\n" +
+                ");";
+
+        String company4Union="CREATE UNIONDEPUTYCLASS company4\n" +
+                "AS\n" +
+                "(\n" +
+                "SELECT nameNew1 AS nameNew2,  ageNew1 AS ageNew2, salaryNew1 AS salaryNew2 FROM  company3 WHERE salaryNew1=1000\n" +
+                "UNION\n" +
+                "SELECT nameNew1 AS nameNew2,  ageNew1 AS ageNew2 , salaryNew1 AS salaryNew2 FROM  company3 WHERE salaryNew1=1000\n" +
+                ");";
+
+        query("CREATE CLASS company1 (name char,age int, salary int);");
+        query("CREATE CLASS company2 (name char,age int, salary int);");
+        query("INSERT INTO company1 VALUES (\"aa\",10,1000);");
+        query("INSERT INTO company1 VALUES (\"bb\",20,1000);");
+        query("INSERT INTO company2 VALUES (\"cc\",30,1000);");
+
+        query(company3Union);
+        query(company4Union);
+
+
         System.out.println("预置命令插入成功");
 
     }
@@ -165,7 +171,7 @@ public class TransAction {
     }
 
     public void presetCommand3(){
-        query("SELECT nameNew1 AS testCompany3,  ageNew1 AS testCompany3 FROM company3 WHERE ageNew1=20;");
+        query("SELECT nameNew1 AS testName,  ageNew1 AS testAge , salaryNew1 AS testSalary   FROM company3 WHERE ageNew1=20;");
     }
     public void presetCommand4(){
         query("SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY  FROM  allAPP WHERE user=\"whu\";");
@@ -1168,6 +1174,7 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
     //UPDATE Song SET type = ‘jazz’WHERE songId = 100;
     //OPT_CREATE_UPDATE，Song，type，“jazz”，songId，=，100
     //0                  1     2      3        4      5  6
+    //可以实现源类向代理类的多级更新迁移
     private void Update(String[] p) {
         String classname = p[1];
         String attrname = p[2];
@@ -1202,19 +1209,20 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
             if (item3.classid == classid) {
                 Tuple tuple = GetTuple(item3.blockid, item3.offset);
                 if (Condition(cattrtype, tuple, cattrid, p[6])) {
-                    UpdatebyID(item3.tupleid, attrid, p[3].replace("\"", ""));
+                    UpdatebyID(item3.tupleid,classid, attrid, p[3].replace("\"", ""));
 
                 }
             }
         }
     }
 
-    private void UpdatebyID(int tupleid, int attrid, String value) {
+    private void UpdatebyID(int tupleid, int Classid, int attrid, String value) {
         for (ObjectTableItem item : topt.objectTable) {
             if (item.tupleid == tupleid) {
                 Tuple tuple = GetTuple(item.blockid, item.offset);
                 tuple.tuple[attrid] = value;
                 UpateTuple(tuple, item.blockid, item.offset);
+                //System.out.println("更新了一个元组");
                 Tuple tuple1 = GetTuple(item.blockid, item.offset);
                 UpateTuple(tuple1, item.blockid, item.offset);
             }
@@ -1222,7 +1230,7 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
 
         String attrname = null;
         for (ClassTableItem item2 : classt.classTable) {
-            if (item2.attrid == attrid) {
+            if (item2.attrid == attrid && item2.classid == Classid) {
                 attrname = item2.attrname;
                 break;
             }
@@ -1244,7 +1252,7 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
                                     dswitchrule = item5.rule;
                                     dvalue = Integer.toString(Integer.parseInt(dvalue) + Integer.parseInt(dswitchrule));
                                 }
-                                UpdatebyID(item1.deputyobjectid, dattrid, dvalue);
+                                UpdatebyID(item1.deputyobjectid,item1.deputyid, dattrid, dvalue);
                                 break;
                             }
                         }
@@ -1254,7 +1262,6 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
         }
 
     }
-
 
     //INSERT INTO aa VALUES (1,2,"3");
     //4,3,aa,1,2,"3"
