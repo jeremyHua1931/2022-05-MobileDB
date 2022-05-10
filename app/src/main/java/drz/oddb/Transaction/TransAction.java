@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import drz.oddb.Log.*;
+import drz.oddb.MainActivity;
 import drz.oddb.Memory.*;
 
 
@@ -143,38 +144,40 @@ public class TransAction {
         System.out.println("第一次执行时,预置插入轨迹命令");
 
         //轨迹预置命令
-        query("CREATE CLASS baidu    (user char, travel char,startX int, startY int, endX int , endY int);");
-        query("CREATE CLASS didi     (user char, travel char,startX int, startY int, endX int , endY int);");
-        query("CREATE CLASS nike     (user char, travel char,startX int, startY int, endX int , endY int);");
-        query("CREATE CLASS addi     (user char, travel char,startX int, startY int, endX int , endY int);");
+        query("CREATE CLASS baidu    (user char, travel char, x float , y float );");
+        query("CREATE CLASS didi     (user char, travel char, x float , y float );");
+        query("CREATE CLASS nike     (user char, travel char, x float , y float );");
+        query("CREATE CLASS addi     (user char, travel char, x float , y float );");
 
-        query("INSERT INTO baidu VALUES (\"whu\",\"1\",23,34,25,56);");
-        query("INSERT INTO didi VALUES  (\"whu\",\"2\",100,101,103,156);");
-        query("INSERT INTO nike VALUES  (\"whu\",\"3\",200,201,203,256);");
-        query("INSERT INTO addi VALUES  (\"whu\",\"4\",300,301,303,356);");
+        query("INSERT INTO baidu VALUES (\"whu\",\"1\",-8.639847,41.159826);");
+        query("INSERT INTO didi VALUES  (\"whu\",\"2\",-18.640351,-41.159871);");
+        query("INSERT INTO nike VALUES  (\"whu\",\"3\",99.640351,91.159871);");
+        query("INSERT INTO addi VALUES  (\"whu\",\"4\",430.640351,71.159871);");
 
         query("CREATE UNIONDEPUTYCLASS allAPP\n" +
                 "AS\n" +
                 "(\n" +
-                "SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  baidu WHERE user=\"whu\"\n" +
+                "SELECT user AS user, travel AS travel ,x AS x, y AS y FROM  baidu WHERE user=\"whu\"\n" +
                 "UNION\n" +
-                "SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  didi WHERE user=\"whu\"\n" +
+                "SELECT user AS user, travel AS travel ,x AS x, y AS y FROM  didi WHERE user=\"whu\"\n" +
                 "UNION\n" +
-                "SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  nike WHERE user=\"whu\"\n" +
+                "SELECT user AS user, travel AS travel ,x AS x, y AS y FROM nike WHERE user=\"whu\"\n" +
                 "UNION\n" +
-                "SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY, endX AS endX, endY AS endY FROM  addi WHERE user=\"whu\"\n" +
+                "SELECT user AS user, travel AS travel ,x AS x, y AS y FROM  addi WHERE user=\"whu\"\n" +
                 ");");
-        query("CREATEMAP WITH user AS user, travel AS travel ,startX AS startX, startY AS startY FROM  allAPP WHERE user=\"whu\";");
+
+        query("CREATEMAP WITH  user AS user, travel AS travel ,x AS x, y AS y FROM  allAPP WHERE user=\"whu\";");
+//        SELECT  user AS user, travel AS travel ,x AS x, y AS y FROM  allAPP WHERE user="whu";
 
 
         System.out.println("预置命令插入成功");
     }
 
     public void presetCommand3(){
-        query("SELECT nameNew1 AS testName,  ageNew1 AS testAge , salaryNew1 AS testSalary   FROM company3 WHERE ageNew1=20;");
+        query("SELECT nameNew1 AS testName,  ageNew1 AS testAge , salaryNew1 AS testSalary   FROM company3 WHERE salaryNew1=1000;");
     }
     public void presetCommand4(){
-        query("SELECT user AS user, travel AS travel ,startX AS startX, startY AS startY  FROM  allAPP WHERE user=\"whu\";");
+        query("SELECT user AS user, travel AS travel ,x AS x, y AS y  FROM  allAPP WHERE user=\"whu\";");
     }
 
 
@@ -249,7 +252,7 @@ public class TransAction {
                     break;
                 case parse.OPT_CREATE_MAP:
                     log.WriteLog(s);
-                    TravelActivity.data= CreateMap(aa);
+                    MainActivity.data1 = CreateMap(aa);
                     // new AlertDialog.Builder(context).setTitle("提示").setMessage("更新成功").setPositiveButton("确定", null).show();
                     break;
                 default:
@@ -266,7 +269,7 @@ public class TransAction {
 
     }
 
-    private String[][] CreateMap(String[] p) {
+    private float[][] CreateMap(String[] p) {
         avgCal avgcal = new avgCal();
         TupleList tpl = new TupleList();
         int attrnumber = Integer.parseInt(p[1]);
@@ -320,8 +323,8 @@ public class TransAction {
 
                     for (int j = 0; j < attrnumber; j++) {
                         if (Integer.parseInt(p[3 + 4 * j]) == 1) {
-                            int value = Integer.parseInt(p[4 + 4 * j]);
-                            int orivalue = Integer.parseInt((String) tuple.tuple[attrid[j]]);
+                            float value = Float.parseFloat(p[4 + 4 * j]);
+                            float orivalue = Float.parseFloat((String) tuple.tuple[attrid[j]]);
                             Object ob = value + orivalue;
                             tuple.tuple[attrid[j]] = ob;
 
@@ -750,6 +753,8 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
             tuple_[j] = p[j + 3];
         }
 
+      //  System.out.println("----------------------------------"+Arrays.toString(tuple_));
+
 
         Tuple tuple = new Tuple(tuple_);
         tuple.tupleHeader = count;
@@ -1036,16 +1041,19 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
     //6,3,b1,1,2,c1,b2,0,0,c2,b3,0,0,c3,bb,t1,=,"1"
     //0 1 2  3 4 5  6  7 8 9  10 111213 14 15 16 17
     private TupleList DirectSelect(String[] p) {
+        System.out.println(Arrays.toString(p));
         TupleList tpl = new TupleList();
         int attrnumber = Integer.parseInt(p[1]);
         String[] attrname = new String[attrnumber];
         int[] attrid = new int[attrnumber];
         String[] attrtype = new String[attrnumber];
+
         String classname = p[2 + 4 * attrnumber];
         int classid = 0;
         for (int i = 0; i < attrnumber; i++) {
             for (ClassTableItem item : classt.classTable) {
                 if (item.classname.equals(classname) && item.attrname.equals(p[2 + 4 * i])) {
+                    System.out.println(item.attrtype);
                     classid = item.classid;
                     attrid[i] = item.attrid;
                     attrtype[i] = item.attrtype;
@@ -1058,18 +1066,15 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
         }
 
 
+
+
         int sattrid = 0;
         String sattrtype = null;
+
         for (ClassTableItem item : classt.classTable) {
-//            System.out.println("----"+item.classid);
-//            System.out.println("---"+classid);
-//            System.out.println("------"+item.attrname);
-//            System.out.println("-----"+p[3 + 4 * attrnumber]);
+
             if (item.classid == classid && item.attrname.equals(p[3 + 4 * attrnumber])) {
-//                System.out.println("---------++++"+item.classid);
-//                System.out.println("---------++++"+classid);
-//                System.out.println("---------++++"+item.attrname);
-//                System.out.println("---------++++"+p[3 + 4 * attrnumber]);
+
 
                 sattrid = item.attrid;
                 sattrtype = item.attrtype;
@@ -1077,7 +1082,7 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
             }
         }
 
-        System.out.println("---------------------" + sattrtype);
+
 
         for (ObjectTableItem item : topt.objectTable) {
             if (item.classid == classid) {
@@ -1087,8 +1092,8 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
 
                     for (int j = 0; j < attrnumber; j++) {
                         if (Integer.parseInt(p[3 + 4 * j]) == 1) {
-                            int value = Integer.parseInt(p[4 + 4 * j]);
-                            int orivalue = Integer.parseInt((String) tuple.tuple[attrid[j]]);
+                            float value = Float.parseFloat(p[4 + 4 * j]);
+                            float orivalue = Float.parseFloat((String) tuple.tuple[attrid[j]]);
                             Object ob = value + orivalue;
                             tuple.tuple[attrid[j]] = ob;
                         }
@@ -1321,7 +1326,6 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
 
     private void PrintSelectResult(TupleList tpl, String[] attrname, int[] attrid, String[] type) {
         Intent intent = new Intent(context, PrintResult.class);
-
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("tupleList", tpl);

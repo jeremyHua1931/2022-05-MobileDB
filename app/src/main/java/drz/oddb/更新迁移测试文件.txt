@@ -5,6 +5,10 @@ INSERT INTO company1 VALUES ("aa",10,1000);
 INSERT INTO company1 VALUES ("bb",20,1000);
 INSERT INTO company2 VALUES ("cc",30,1000);
 
+CREATE CLASS company1 (name char,age int, salary float);
+INSERT INTO company1 VALUES ("aa",10,1000.1);
+SELECT name AS company1Name,  age AS company1Age , salary AS company1Salary   FROM company1   WHERE name="aa";
+
 
 //新建代理类
 

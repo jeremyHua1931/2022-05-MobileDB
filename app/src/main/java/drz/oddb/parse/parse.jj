@@ -21,14 +21,12 @@ public static final int OPT_CREATE_UPDATE         = 8;
 public static final int OPT_CREATE_UNIONDEPUTYCLASS        = 9;
 public static final int OPT_CREATE_MAP        = 10;
 
-	static Queue<String > st= new LinkedList<String>();
-  public static void main(String[] args) throws ParseException {
+	static Queue<String > st= new LinkedList<String>(); ;
+  public static void main(String args[]) throws ParseException {
 
     parse parser = new parse(System.in);
     parser.Run();
      }
-
-}}
 
 }
 
@@ -63,10 +61,10 @@ TOKEN:
 |<UNIONDEPUTYCLASS:"UNIONDEPUTYCLASS">
 |<ID: ["a"-"z"](["a"-"z","A"-"Z","0"-"9"])* >
 |<EQUAL:"=">
-|<INT :"0"| (["0"-"9"])+
+|<INT :("-")*("0"| (["0"-"9"])+
                   | (["0"-"9"])+ "." (["0"-"9"])+
                   | (["0"-"9"])+ "."
-                  | "." (["0"-"9"])+ >
+                  | "." (["0"-"9"])+ )>
 |<STRING: "\""(["a"-"z","A"-"Z","1"-"9"])*"\"" >
 |<CROSS:"->">
 |<DOT:".">

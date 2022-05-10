@@ -10,6 +10,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.util.Arrays;
+
 import drz.oddb.Memory.TupleList;
 import drz.oddb.R;
 
@@ -31,6 +33,8 @@ public class PrintResult extends AppCompatActivity {
 
      public void Print(TupleList tpl,String[] attrname,int[] attrid,String[] type){
 
+        System.out.println(Arrays.toString(type));
+
         int tabCol  = attrid.length;
         int tabH = tpl.tuplenum;
         int r;
@@ -50,13 +54,21 @@ public class PrintResult extends AppCompatActivity {
                 }
                 else{
                     oj = tpl.tuplelist.get(r-1).tuple[c];
+                    System.out.println(type[attrid[c]]);
                     switch (type[attrid[c]]){
                         case "int":
                             itemp = Integer.parseInt(oj.toString());
                             tv.setText(itemp+"");
+                            break;
+                        case "float":
+                            float itemp1;
+                            itemp1 = Float.parseFloat(oj.toString());
+                            tv.setText(itemp1+"");
+                            break;
                         case "char":
                             stemp = oj.toString();
                             tv.setText(stemp);
+                            break;
                     }
                 }
                 tv.setGravity(Gravity.CENTER);
@@ -69,5 +81,6 @@ public class PrintResult extends AppCompatActivity {
         }
 
     }
+
 
 }

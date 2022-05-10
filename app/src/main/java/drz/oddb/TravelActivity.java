@@ -28,7 +28,6 @@ import drz.oddb.Transaction.TransAction;
 
 public class TravelActivity extends AppCompatActivity {
 
-    public static String[][] data=new String[4][];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,12 +37,14 @@ public class TravelActivity extends AppCompatActivity {
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 for (int i = 0; i <= 4; i++) {
-                    System.out.println(Arrays.deepToString(data[i]));
+                    System.out.println(Arrays.deepToString(new float[][]{MainActivity.data1[i]}));
                 }
 
                 //TODO: 此处进行地图展示动作 data[][]为轨迹数据值,需要提前执行
-                // CREATEMAP WITH user AS user, travel AS travel ,startX AS startX, startY AS startY FROM  allAPP WHERE user="whu";
+                // CREATEMAP WITH user AS user, travel AS travel ,x AS x, y AS y FROM  allAPP WHERE user="whu";
             }
         });
 
