@@ -7,7 +7,7 @@ public class LogManage {
     final private int MAXSIZE=5;
     private int checkpoint=-1;
     private int logid=0;    //LogTable块id
-    private TransAction trans;
+    private final TransAction trans;
     public LogTable LogT = new LogTable();   //存放执行层创建LogManage时写入的日志
 
     //构造方法

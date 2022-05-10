@@ -22,9 +22,9 @@ public class MemManage implements Serializable {
     final private int bufflength=1000;//缓冲区大小为1000个块
     final private int blocklength=8*1024;//块大小为8KB
 
-    private List<buffPointer> BuffPointerList = new ArrayList<>();		//构建缓冲区指针表
-    private ByteBuffer MemBuff=ByteBuffer.allocateDirect(blocklength*bufflength);//分配blocklength*bufflength大小的缓冲区
-    private boolean[] buffuse=new boolean[bufflength];//缓冲区可用状态表，true为可用
+    private final List<buffPointer> BuffPointerList = new ArrayList<>();		//构建缓冲区指针表
+    private final ByteBuffer MemBuff=ByteBuffer.allocateDirect(blocklength*bufflength);//分配blocklength*bufflength大小的缓冲区
+    private final boolean[] buffuse=new boolean[bufflength];//缓冲区可用状态表，true为可用
     private int blockmaxnum=-1;//最大的块号
     private int[] blockspace=new int[10];//块空闲空间信息
 
@@ -45,11 +45,7 @@ public class MemManage implements Serializable {
                 if(!save(sbu))break;
             }
         }//将缓冲区存入磁盘
-        if(i==BuffPointerList.size()){
-            return true;
-        }else{
-            return false;
-        }
+        return i == BuffPointerList.size();
     }
 
     //删除元组
@@ -69,7 +65,7 @@ public class MemManage implements Serializable {
         }else{
             try {
                 FileInputStream input = new FileInputStream(switab);
-                byte buff[] = new byte[3*attrstringlen];
+                byte[] buff = new byte[3*attrstringlen];
                 while (input.read(buff, 0, 3*attrstringlen) != -1) {
                     temp = new SwitchingTableItem();
                     temp.attr = byte2str(buff, 0, attrstringlen);
@@ -132,7 +128,7 @@ public class MemManage implements Serializable {
         }else{
             try {
                 FileInputStream input = new FileInputStream(bitab);
-                byte buff[] = new byte[16];
+                byte[] buff = new byte[16];
                 while (input.read(buff, 0, 16) != -1) {
                     temp = new BiPointerTableItem();
                     temp.classid = bytes2Int(buff, 0, 4);
@@ -198,7 +194,7 @@ public class MemManage implements Serializable {
         }else {
             try {
                 FileInputStream input = new FileInputStream(deputytab);
-                byte buff[] = new byte[8+3*attrstringlen];
+                byte[] buff = new byte[8+3*attrstringlen];
                 while (input.read(buff, 0, 8+attrstringlen*3) != -1) {
                     temp = new DeputyTableItem();
                     temp.deputyrule=new String[3];
@@ -358,7 +354,7 @@ public class MemManage implements Serializable {
                 byte[] x=new byte[4];
                 input.read(x,0,4);
                 ret.maxTupleId=bytes2Int(x,0,4);
-                byte buff[]=new byte[16];
+                byte[] buff =new byte[16];
                 while(input.read(buff,0,16)!=-1){
                     temp=new ObjectTableItem();
                     temp.classid=bytes2Int(buff,0,4);
@@ -469,7 +465,7 @@ public class MemManage implements Serializable {
             if((p=findBlock(k))==null){
                 //块不在缓冲区，从磁盘加载块
                 p=load(k);
-            };
+            }
             byte[] x=new byte[4];
             for(int i=0;i<4;i++){
                 x[i]=MemBuff.get(p.buf_id*blocklength+i);

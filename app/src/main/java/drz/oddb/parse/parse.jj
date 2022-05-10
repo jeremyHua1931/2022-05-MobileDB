@@ -21,12 +21,14 @@ public static final int OPT_CREATE_UPDATE         = 8;
 public static final int OPT_CREATE_UNIONDEPUTYCLASS        = 9;
 public static final int OPT_CREATE_MAP        = 10;
 
-	static Queue<String > st= new LinkedList<String>(); ;
-  public static void main(String args[]) throws ParseException {
+	static Queue<String > st= new LinkedList<String>();
+  public static void main(String[] args) throws ParseException {
 
     parse parser = new parse(System.in);
     parser.Run();
      }
+
+}}
 
 }
 
