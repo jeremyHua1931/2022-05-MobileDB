@@ -13,7 +13,8 @@
             android:name=".TravelActivity"
             android:exported="false" />
 
-        <service android:name=".MusicServer">
+        <service android:name=".MusicServer"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.angel.Android.MUSIC" />
 
@@ -30,7 +31,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,7 +41,8 @@
         </activity>
         <activity
             android:name=".show.PrintResult"
-            android:label="Print Result">
+            android:label="Print Result"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.PRINTRST" />
 
