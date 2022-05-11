@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView text_view;
     TransAction trans = new TransAction(this);
-    public static float[][] data1 =new float[4][];
+    public static double[][] data1 =new double[4][];
     Intent music = null;
 
     Context context;

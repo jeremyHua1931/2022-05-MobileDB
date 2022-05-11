@@ -18,7 +18,7 @@ import drz.oddb.Transaction.SystemTable.*;
 import drz.oddb.Transaction.SystemTable.ObjectTable;
 
 public class MemManage implements Serializable {
-    final private int attrstringlen=8; //属性最大字符串长度为8Byte
+    final private int attrstringlen=16; //属性最大字符串长度为8Byte
     final private int bufflength=1000;//缓冲区大小为1000个块
     final private int blocklength=8*1024;//块大小为8KB
 

@@ -35,7 +35,7 @@ public class PrintResult extends AppCompatActivity {
 
      public void Print(TupleList tpl,String[] attrname,int[] attrid,String[] type){
 
-        System.out.println(Arrays.toString(type));
+        System.out.println("++++++++++++++++++++++++++++++"+Arrays.toString(type));
 
         int tabCol  = attrid.length;
         int tabH = tpl.tuplenum;
@@ -56,7 +56,7 @@ public class PrintResult extends AppCompatActivity {
                 }
                 else{
                     oj = tpl.tuplelist.get(r-1).tuple[c];
-                    System.out.println(type[attrid[c]]);
+                    System.out.println("==========================="+type[attrid[c]]);
                     switch (type[attrid[c]]){
                         case "int":
                             itemp = Integer.parseInt(oj.toString());
@@ -66,6 +66,11 @@ public class PrintResult extends AppCompatActivity {
                             float itemp1;
                             itemp1 = Float.parseFloat(oj.toString());
                             tv.setText(itemp1+"");
+                            break;
+                        case "double":
+                            double itemp12;
+                            itemp12 = Double.parseDouble(oj.toString());
+                            tv.setText(itemp12+"");
                             break;
                         case "char":
                             stemp = oj.toString();

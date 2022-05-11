@@ -144,10 +144,10 @@ public class TransAction {
         System.out.println("第一次执行时,预置插入轨迹命令");
 
         //轨迹预置命令
-        query("CREATE CLASS baidu    (user char, travel char, x float , y float );");
-        query("CREATE CLASS didi     (user char, travel char, x float , y float );");
-        query("CREATE CLASS nike     (user char, travel char, x float , y float );");
-        query("CREATE CLASS addi     (user char, travel char, x float , y float );");
+        query("CREATE CLASS baidu    (user char, travel char, x double , y double );");
+        query("CREATE CLASS didi     (user char, travel char, x double , y double );");
+        query("CREATE CLASS nike     (user char, travel char, x double , y double );");
+        query("CREATE CLASS addi     (user char, travel char, x double , y double );");
 
 //        query("INSERT INTO baidu VALUES (\"whu\",\"1\",-8.639847,41.159826);");
 //        query("INSERT INTO didi VALUES  (\"whu\",\"2\",-18.640351,-41.159871);");
@@ -166,12 +166,14 @@ public class TransAction {
         query("INSERT INTO didi  VALUES (\"whu\",\"2\",114.362437,30.535813);");
         query("INSERT INTO didi  VALUES (\"whu\",\"2\",114.362834,30.534081);");
         query("INSERT INTO didi  VALUES (\"whu\",\"2\",114.362974,30.533240);");
+
         query("INSERT INTO nike  VALUES (\"whu\",\"3\",114.357738,30.533243);");
         query("INSERT INTO nike  VALUES (\"whu\",\"3\",114.358811,30.534324);");
         query("INSERT INTO nike  VALUES (\"whu\",\"3\",114.361751,30.535849);");
         query("INSERT INTO nike  VALUES (\"whu\",\"3\",114.363006,30.535351);");
         query("INSERT INTO nike  VALUES (\"whu\",\"3\",114.362131,30.534173);");
         query("INSERT INTO nike  VALUES (\"whu\",\"3\",114.363419,30.533226);");
+
         query("INSERT INTO addi  VALUES (\"whu\",\"4\",114.357888,30.533012);");
         query("INSERT INTO addi  VALUES (\"whu\",\"4\",114.358618,30.534768);");
         query("INSERT INTO addi  VALUES (\"whu\",\"4\",114.360978,30.536182);");
@@ -191,7 +193,7 @@ public class TransAction {
                 "SELECT user AS user, travel AS travel ,x AS x, y AS y FROM  addi WHERE user=\"whu\"\n" +
                 ");");
 
-       query("CREATEMAP WITH  user AS user, travel AS travel ,x AS x, y AS y FROM  allAPP WHERE user=\"whu\";");
+
 //        SELECT  user AS user, travel AS travel ,x AS x, y AS y FROM  allAPP WHERE user="whu";
 
 
@@ -294,7 +296,7 @@ public class TransAction {
 
     }
 
-    private float[][] CreateMap(String[] p) {
+    private double[][] CreateMap(String[] p) {
         avgCal avgcal = new avgCal();
         TupleList tpl = new TupleList();
         int attrnumber = Integer.parseInt(p[1]);
@@ -348,8 +350,8 @@ public class TransAction {
 
                     for (int j = 0; j < attrnumber; j++) {
                         if (Integer.parseInt(p[3 + 4 * j]) == 1) {
-                            float value = Float.parseFloat(p[4 + 4 * j]);
-                            float orivalue = Float.parseFloat((String) tuple.tuple[attrid[j]]);
+                            double value = Double.parseDouble(p[4 + 4 * j]);
+                            double orivalue = Double.parseDouble((String) tuple.tuple[attrid[j]]);
                             Object ob = value + orivalue;
                             tuple.tuple[attrid[j]] = ob;
 
@@ -589,8 +591,9 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
 
                         for (int o = 0; o < Integer.parseInt(attrCount); o++) {
                             if (Integer.parseInt(selectALL[i][3 + 4 * o]) == 1) {
-                                int value = Integer.parseInt(selectALL[i][4 + 4 * o]);
-                                int orivalue = Integer.parseInt((String) tuple.tuple[bedeputyattrid[o]]);
+                                double value = Double.parseDouble(selectALL[i][4 + 4 * o]);
+                                double orivalue = Double.parseDouble((String) tuple.tuple[bedeputyattrid[o]]);
+
                                 Object ob = value + orivalue;
                                 ituple.tuple[o] = ob;
                             }
@@ -777,10 +780,12 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
             tuple_[j] = p[j + 3];
         }
 
-      //  System.out.println("----------------------------------"+Arrays.toString(tuple_));
+        System.out.println("----------------------------------"+Arrays.toString(tuple_));
 
 
         Tuple tuple = new Tuple(tuple_);
+
+        System.out.println(Arrays.toString(tuple.tuple));
         tuple.tupleHeader = count;
 
         int[] a = InsertTuple(tuple);
@@ -789,7 +794,6 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
         topt.objectTable.add(new ObjectTableItem(classid, tupleid, a[0], a[1]));
 
         //向代理类加元组
-
         for (DeputyTableItem item : deputyt.deputyTable) {
             if (classid == item.originid) {
                 //判断代理规则
@@ -853,8 +857,6 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
                     int deojid = Insert(ss);
                     //插入Bi
                     biPointerT.biPointerTable.add(new BiPointerTableItem(classid, tupleid, item.deputyid, deojid));
-
-
                 }
             }
         }
@@ -1065,7 +1067,9 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
     //6,3,b1,1,2,c1,b2,0,0,c2,b3,0,0,c3,bb,t1,=,"1"
     //0 1 2  3 4 5  6  7 8 9  10 111213 14 15 16 17
     private TupleList DirectSelect(String[] p) {
-        System.out.println(Arrays.toString(p));
+
+        System.out.println("开始select"+Arrays.toString(p));
+
         TupleList tpl = new TupleList();
         int attrnumber = Integer.parseInt(p[1]);
         String[] attrname = new String[attrnumber];
@@ -1089,7 +1093,9 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
             }
         }
 
-
+        System.out.println(Arrays.toString(attrid));
+        System.out.println(Arrays.toString(attrtype));
+        System.out.println(Arrays.toString(attrname));
 
 
         int sattrid = 0;
@@ -1106,19 +1112,24 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
             }
         }
 
-
-
         for (ObjectTableItem item : topt.objectTable) {
+
+
             if (item.classid == classid) {
                 Tuple tuple = GetTuple(item.blockid, item.offset);
+
+                System.out.println("取出的元组是" + Arrays.toString(tuple.tuple));
+
                 if (Condition(sattrtype, tuple, sattrid, p[4 * attrnumber + 5])) {
                     //Switch
 
                     for (int j = 0; j < attrnumber; j++) {
                         if (Integer.parseInt(p[3 + 4 * j]) == 1) {
-                            float value = Float.parseFloat(p[4 + 4 * j]);
-                            float orivalue = Float.parseFloat((String) tuple.tuple[attrid[j]]);
+                            double value = Double.parseDouble(p[4 + 4 * j]);
+                            double orivalue = Double.parseDouble((String) tuple.tuple[attrid[j]]);
                             Object ob = value + orivalue;
+
+                            System.out.println("------------------------------"+ob);
                             tuple.tuple[attrid[j]] = ob;
                         }
 
