@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public int startPreset = 0;
+    public static int MAPPreset=0;
     public int presetInsert1 = 0;
     public int presetInsert2 = 0;
 
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         Button presetCommandButton = findViewById(R.id.presetCommandButton);
-        final String[] choice = new String[]{"无预置命令", "company预置命令", "AppTravel预置命令", "companySelect", "AppTravelSelect"};
+        final String[] choice = new String[]{"无预置命令", "company预置命令", "AppTravel预置命令", "companySelect", "AppTravelSelect","Create MAP"};
 
         String presetChoice;
         int[] c = new int[1];
@@ -82,22 +83,15 @@ public class MainActivity extends AppCompatActivity {
 
                                 trans.presetCommand1();
 
-
-                                System.out.println("执行命令1");
-
-
                         } else if (c[0] == 2) {
-
-
                                 trans.presetCommand2();
-
-                                System.out.println("执行命令2");
-
 
                         } else if (c[0] == 3) {
                             trans.presetCommand3();
                         } else if (c[0] == 4) {
                             trans.presetCommand4();
+                        }else if(c[0]==5){
+                            trans.query("CREATEMAP WITH user AS user, travel AS travel ,x AS x, y AS y FROM  allAPP WHERE user=\"user\";");
                         }
 
                     }

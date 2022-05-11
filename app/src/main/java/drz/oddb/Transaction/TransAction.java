@@ -148,53 +148,48 @@ public class TransAction {
         query("CREATE CLASS didi     (user char, travel char, x double , y double );");
         query("CREATE CLASS nike     (user char, travel char, x double , y double );");
         query("CREATE CLASS addi     (user char, travel char, x double , y double );");
+        query("INSERT INTO baidu VALUES (\"user\",\"baidu\",114.358071,30.533123);");
+        query("INSERT INTO baidu VALUES (\"user\",\"baidu\",114.359197,30.534533);");
+        query("INSERT INTO baidu VALUES (\"user\",\"baidu\",114.361708,30.535895);");
+        query("INSERT INTO baidu VALUES (\"user\",\"baidu\",114.362759,30.535729);");
+        query("INSERT INTO baidu VALUES (\"user\",\"baidu\",114.362512,30.533964);");
+        query("INSERT INTO baidu VALUES (\"user\",\"baidu\",114.363092,30.533373);");
 
-//        query("INSERT INTO baidu VALUES (\"whu\",\"1\",-8.639847,41.159826);");
-//        query("INSERT INTO didi VALUES  (\"whu\",\"2\",-18.640351,-41.159871);");
-//        query("INSERT INTO nike VALUES  (\"whu\",\"3\",99.640351,91.159871);");
-//        query("INSERT INTO addi VALUES  (\"whu\",\"4\",430.640351,71.159871);");
-        query("INSERT INTO baidu VALUES (\"whu\",\"1\",114.358071,30.533123);");
-        query("INSERT INTO baidu VALUES (\"whu\",\"1\",114.359197,30.534533);");
-        query("INSERT INTO baidu VALUES (\"whu\",\"1\",114.361708,30.535895);");
-        query("INSERT INTO baidu VALUES (\"whu\",\"1\",114.362759,30.535729);");
-        query("INSERT INTO baidu VALUES (\"whu\",\"1\",114.362512,30.533964);");
-        query("INSERT INTO baidu VALUES (\"whu\",\"1\",114.363092,30.533373);");
+        query("INSERT INTO didi  VALUES (\"user\",\"didi\",114.358232,30.533114);");
+        query("INSERT INTO didi  VALUES (\"user\",\"didi\",114.358779,30.534722);");
+        query("INSERT INTO didi  VALUES (\"user\",\"didi\",114.361032,30.535969);");
+        query("INSERT INTO didi  VALUES (\"user\",\"didi\",114.362437,30.535813);");
+        query("INSERT INTO didi  VALUES (\"user\",\"didi\",114.362834,30.534081);");
+        query("INSERT INTO didi  VALUES (\"user\",\"didi\",114.362974,30.533240);");
 
-        query("INSERT INTO didi  VALUES (\"whu\",\"2\",114.358232,30.533114);");
-        query("INSERT INTO didi  VALUES (\"whu\",\"2\",114.358779,30.534722);");
-        query("INSERT INTO didi  VALUES (\"whu\",\"2\",114.361032,30.535969);");
-        query("INSERT INTO didi  VALUES (\"whu\",\"2\",114.362437,30.535813);");
-        query("INSERT INTO didi  VALUES (\"whu\",\"2\",114.362834,30.534081);");
-        query("INSERT INTO didi  VALUES (\"whu\",\"2\",114.362974,30.533240);");
+        query("INSERT INTO nike  VALUES (\"user\",\"nike\",114.357738,30.533243);");
+        query("INSERT INTO nike  VALUES (\"user\",\"nike\",114.358811,30.534324);");
+        query("INSERT INTO nike  VALUES (\"user\",\"nike\",114.361751,30.535849);");
+        query("INSERT INTO nike  VALUES (\"user\",\"nike\",114.363006,30.535351);");
+        query("INSERT INTO nike  VALUES (\"user\",\"nike\",114.362131,30.534173);");
+        query("INSERT INTO nike  VALUES (\"user\",\"nike\",114.363419,30.533226);");
 
-        query("INSERT INTO nike  VALUES (\"whu\",\"3\",114.357738,30.533243);");
-        query("INSERT INTO nike  VALUES (\"whu\",\"3\",114.358811,30.534324);");
-        query("INSERT INTO nike  VALUES (\"whu\",\"3\",114.361751,30.535849);");
-        query("INSERT INTO nike  VALUES (\"whu\",\"3\",114.363006,30.535351);");
-        query("INSERT INTO nike  VALUES (\"whu\",\"3\",114.362131,30.534173);");
-        query("INSERT INTO nike  VALUES (\"whu\",\"3\",114.363419,30.533226);");
-
-        query("INSERT INTO addi  VALUES (\"whu\",\"4\",114.357888,30.533012);");
-        query("INSERT INTO addi  VALUES (\"whu\",\"4\",114.358618,30.534768);");
-        query("INSERT INTO addi  VALUES (\"whu\",\"4\",114.360978,30.536182);");
-        query("INSERT INTO addi  VALUES (\"whu\",\"4\",114.362276,30.535573);");
-        query("INSERT INTO addi  VALUES (\"whu\",\"4\",114.362161,30.533848);");
-        query("INSERT INTO addi  VALUES (\"whu\",\"4\",114.362936,30.533615);");
+        query("INSERT INTO addi  VALUES (\"user\",\"addi\",114.357888,30.533012);");
+        query("INSERT INTO addi  VALUES (\"user\",\"addi\",114.358618,30.534768);");
+        query("INSERT INTO addi  VALUES (\"user\",\"addi\",114.360978,30.536182);");
+        query("INSERT INTO addi  VALUES (\"user\",\"addi\",114.362276,30.535573);");
+        query("INSERT INTO addi  VALUES (\"user\",\"addi\",114.362161,30.533848);");
+        query("INSERT INTO addi  VALUES (\"user\",\"addi\",114.362936,30.533615);");
 
         query("CREATE UNIONDEPUTYCLASS allAPP\n" +
                 "AS\n" +
                 "(\n" +
-                "SELECT user AS user, travel AS travel ,x AS x, y AS y FROM  baidu WHERE user=\"whu\"\n" +
+                "SELECT user AS user, travel AS travel ,x AS x, y AS y FROM  baidu WHERE user=\"user\"\n" +
                 "UNION\n" +
-                "SELECT user AS user, travel AS travel ,x AS x, y AS y FROM  didi WHERE user=\"whu\"\n" +
+                "SELECT user AS user, travel AS travel ,x AS x, y AS y FROM  didi WHERE user=\"user\"\n" +
                 "UNION\n" +
-                "SELECT user AS user, travel AS travel ,x AS x, y AS y FROM nike WHERE user=\"whu\"\n" +
+                "SELECT user AS user, travel AS travel ,x AS x, y AS y FROM nike WHERE user=\"user\"\n" +
                 "UNION\n" +
-                "SELECT user AS user, travel AS travel ,x AS x, y AS y FROM  addi WHERE user=\"whu\"\n" +
+                "SELECT user AS user, travel AS travel ,x AS x, y AS y FROM  addi WHERE user=\"user\"\n" +
                 ");");
 
 
-//        SELECT  user AS user, travel AS travel ,x AS x, y AS y FROM  allAPP WHERE user="whu";
+//        CREATEMAP WITH user AS user, travel AS travel ,x AS x, y AS y FROM  allAPP WHERE user="whu";
 
 
         System.out.println("预置命令插入成功");
@@ -204,7 +199,7 @@ public class TransAction {
         query("SELECT nameNew1 AS testName,  ageNew1 AS testAge , salaryNew1 AS testSalary   FROM company3 WHERE salaryNew1=1000;");
     }
     public void presetCommand4(){
-        query("SELECT user AS user, travel AS travel ,x AS x, y AS y  FROM  allAPP WHERE user=\"whu\";");
+        query("SELECT user AS user, travel AS travel ,x AS x, y AS y  FROM  allAPP WHERE user=\"user\";");
     }
 
 
@@ -291,7 +286,7 @@ public class TransAction {
             e.printStackTrace();
         }
 
-        Toast.makeText(context.getApplicationContext(), "命令执行成功",Toast.LENGTH_SHORT).show();
+
         return s;
 
     }
