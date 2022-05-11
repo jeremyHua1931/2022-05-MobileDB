@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class avgCal {
     //存储外部发送的四组坐标数据
-    private static String[] tuples = new String[4];
+    private static String[] tuples = new String[24];
     int cnt = 0;
 
 

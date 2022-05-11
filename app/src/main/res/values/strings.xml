@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">移动TotemDB系统</string>
+    <string name="app_name">TotemDB</string>
     <string name="tip1">执行预置命令</string>
 </resources>
