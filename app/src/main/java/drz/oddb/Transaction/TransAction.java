@@ -446,9 +446,10 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
 
          (3)元组真实数据的存储
 
-            在修改objectTable中涉及如何取出真实数据和如何存放新数据??
+            在修改objectTable时取出对应元组并复制存放到新表中
 
          */
+
 
         //1-修改ClassTable和SwitchingTable
 
@@ -467,12 +468,10 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
 
         String beDeputyName = selectALL[0][OneSelect - 2];
 
-
         for (int i = 0; i < Integer.parseInt(attrCount); i++) {
             for (ClassTableItem item : classt.classTable) {
                 //遍历到的类名等于被代理的类名且属性名等于第一个被选择的代理属性名(依次选择),增加代理类新属性名到classt表上
                 if (item.classname.equals(beDeputyName) && item.attrname.equals(selectALL[0][4 * i + 2])) {
-
 
                     bedeputyattrid[i] = item.attrid;
 
@@ -489,7 +488,6 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
                 }
             }
         }
-
         for (int i = 0; i < Integer.parseInt(selectCount); i++) {
 //            System.out.println("被代理类的名字是" + selectALL[i][OneSelect - 2]);
             for (ClassTableItem item : classt.classTable) {
@@ -542,6 +540,7 @@ I/System.out: [6, 6, name, 0, 0, name1, age, 0, 0, age1, company, name, =, "aa"]
         System.out.println("所有Where所选择的属性的类型: " + Arrays.toString(contype));
 
 
+        //4-修改object表
         List<ObjectTableItem> obj = new ArrayList<>();
 
         for (int i = 0; i < Integer.parseInt(selectCount); i++) {

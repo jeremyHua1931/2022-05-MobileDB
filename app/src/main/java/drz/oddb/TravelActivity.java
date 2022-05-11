@@ -43,7 +43,7 @@ public class TravelActivity extends AppCompatActivity {
                     System.out.println(Arrays.deepToString(new float[][]{MainActivity.data1[i]}));
                 }
 
-                //TODO: 此处进行地图展示动作 data[][]为轨迹数据值,需要提前执行
+                //TODO: 此处进行地图展示动作 float data[][]为轨迹数据值,需要提前执行，不行你自己先定义一组float[] [],
                 // CREATEMAP WITH user AS user, travel AS travel ,x AS x, y AS y FROM  allAPP WHERE user="whu";
             }
         });

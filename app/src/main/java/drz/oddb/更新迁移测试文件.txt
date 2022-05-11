@@ -42,38 +42,28 @@ SELECT nameNew2 AS company4Name,  ageNew2 AS company4Age , salaryNew2 AS company
 update
 
 1-更改源类
-
 UPDATE company1 SET age=100 WHERE name="bb";
 
 2-更改一级代理类
-
 UPDATE company3 SET ageNew1=888 WHERE nameNew1="bb";
 
 3-更改二级代理类
-
 UPDATE company4 SET ageNew2=999 WHERE nameNew2="bb";
 
 
 insert
 
 INSERT INTO company1 VALUES ("bb",999,1000);
-
 INSERT INTO company3 VALUES ("bb",999,1000);
-
 INSERT INTO company4 VALUES ("bb",999,1000);
 
 DELETE
 
 DELETE FROM company1 WHERE name="bb";
-
 DELETE FROM company3 WHERE nameNew1="bb";
-
 DELETE FROM company4 WHERE nameNew2="cc";
 
 DROP
 DROP CLASS company1;
 DROP CLASS company3;
 DROP CLASS company4;
-
-
-
